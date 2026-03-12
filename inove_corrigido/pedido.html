@@ -467,7 +467,18 @@
   document.getElementById('qtyLimits').textContent = `Mínimo: ${serviceMin.toLocaleString('pt-BR')} — Máximo: ${serviceMax.toLocaleString('pt-BR')}`;
   document.getElementById('qtyInput').min = serviceMin;
   document.getElementById('qtyInput').max = serviceMax;
-  document.getElementById('qtyInput').value = serviceMin < 350 ? 350 : serviceMin;
+  // Valor inicial: respeita min e max do serviço
+  const initialQty = Math.min(serviceMax, serviceMin);
+  document.getElementById('qtyInput').value = initialQty;
+
+  // Step dos botões ± inteligente baseado no range do serviço
+  const step = serviceMax <= 50 ? 1
+             : serviceMax <= 500 ? 10
+             : serviceMax <= 5000 ? 100
+             : 1000;
+  document.querySelectorAll('.qty-btn').forEach((btn, i) => {
+    btn.onclick = () => changeQty(i === 0 ? -step : step);
+  });
 
   // Calculos
   let payMethod = 'pix';
@@ -499,10 +510,20 @@
 
   function changeQty(delta) {
     const input = document.getElementById('qtyInput');
-    const val = Math.min(serviceMax, Math.max(serviceMin, (parseInt(input.value)||0) + delta));
+    const val = Math.min(serviceMax, Math.max(serviceMin, (parseInt(input.value)||serviceMin) + delta));
     input.value = val;
     atualizaResumo();
   }
+
+  // Bloqueia digitação fora do range ao perder foco
+  document.getElementById('qtyInput').addEventListener('blur', () => {
+    const input = document.getElementById('qtyInput');
+    let val = parseInt(input.value) || serviceMin;
+    if (val < serviceMin) val = serviceMin;
+    if (val > serviceMax) val = serviceMax;
+    input.value = val;
+    atualizaResumo();
+  });
 
   function selectPay(method) {
     payMethod = method;
