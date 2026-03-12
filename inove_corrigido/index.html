@@ -21,7 +21,12 @@
     --white: #FFFFFF;
   }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+  * { margin: 0; padding: 0; box-sizing: border-box; max-width: 100%; }
+
+  html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
 
   body {
     background: var(--bg);
@@ -239,7 +244,7 @@
     position: absolute;
     top: -100px; left: 50%;
     transform: translateX(-50%);
-    width: 700px; height: 400px;
+    width: min(700px, 100vw); height: 400px;
     background: radial-gradient(ellipse, rgba(139,47,201,0.25) 0%, transparent 70%);
     pointer-events: none;
   }
