@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Serviços - Instagram</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --purple: #8B2FC9;
+      --purple-light: #A855F7;
+      --purple-dark: #6D1FA0;
+      --purple-glow: rgba(139, 47, 201, 0.4);
+      --bg: #0A0A0F;
+      --bg2: #111118;
+      --card: #1A1A26;
+      --card-border: #2A2A3A;
+      --text: #F0F0FF;
+      --text-muted: #8888AA;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+    }
+
+    /* NAVBAR */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 32px;
+      background: rgba(10,10,15,0.95);
+      border-bottom: 1px solid var(--card-border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+
+    .nav-back {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--purple-light);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      transition: opacity 0.2s;
+    }
+    .nav-back:hover { opacity: 0.7; }
+
+    .nav-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+    }
+
+    .plat-icon-nav {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(135deg, #0A0A0F 0%, #1a0a2e 50%, #0A0A0F 100%);
+      padding: 48px 32px 36px;
+      text-align: center;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(139,47,201,0.15);
+      border: 1px solid rgba(168,85,247,0.3);
+      color: var(--purple-light);
+      font-size: 12px;
+      font-family: 'Orbitron', sans-serif;
+      letter-spacing: 2px;
+      padding: 6px 16px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 28px;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .hero h1 em {
+      font-style: normal;
+      background: linear-gradient(135deg, var(--purple-light), #E040FB);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      color: var(--text-muted);
+      font-size: 15px;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    /* FILTRO */
+    .filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 20px 32px;
+      background: var(--bg2);
+      border-bottom: 1px solid var(--card-border);
+      flex-wrap: wrap;
+    }
+
+    .search-input {
+      flex: 1;
+      min-width: 200px;
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      color: var(--text);
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: 'DM Sans', sans-serif;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .search-input:focus { border-color: var(--purple-light); }
+    .search-input::placeholder { color: var(--text-muted); }
+
+    .results-count {
+      color: var(--text-muted);
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    /* CONTAINER */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 32px 20px;
+    }
+
+    /* LOADING */
+    .loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 20px;
+      gap: 16px;
+      color: var(--text-muted);
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--card-border);
+      border-top-color: var(--purple-light);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ERRO */
+    .error-box {
+      background: rgba(220,38,38,0.1);
+      border: 1px solid rgba(220,38,38,0.3);
+      color: #FCA5A5;
+      padding: 20px 24px;
+      border-radius: 12px;
+      text-align: center;
+      margin: 40px auto;
+      max-width: 500px;
+    }
+
+    /* GRID DE SERVIÇOS */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 16px;
+    }
+
+    .service-card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 20px;
+      transition: border-color 0.2s, transform 0.2s;
+      cursor: pointer;
+    }
+
+    .service-card:hover {
+      border-color: var(--purple);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(139,47,201,0.15);
+    }
+
+    .service-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .service-id {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-family: 'Orbitron', sans-serif;
+      background: rgba(139,47,201,0.1);
+      border: 1px solid rgba(139,47,201,0.2);
+      padding: 3px 8px;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+
+    .service-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1.4;
+      flex: 1;
+    }
+
+    .service-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--card-border);
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .service-price {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--purple-light), #E040FB);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .service-qty {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .service-btn {
+      background: linear-gradient(135deg, var(--purple), var(--purple-light));
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .service-btn:hover { opacity: 0.85; }
+
+    /* NENHUM RESULTADO */
+    .no-results {
+      text-align: center;
+      color: var(--text-muted);
+      padding: 60px 20px;
+      grid-column: 1/-1;
+    }
+
+    @media (max-width: 600px) {
+      nav { padding: 12px 16px; }
+      .hero { padding: 32px 16px 24px; }
+      .hero h1 { font-size: 22px; }
+      .filter-bar { padding: 14px 16px; }
+      .container { padding: 20px 12px; }
+      .services-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-back">
+      ← Voltar
+    </a>
+    <div class="nav-title">
+      <div class="plat-icon-nav">
+        <svg viewBox="0 0 24 24" fill="white" width="18" height="18"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+      </div>
+      Serviços Instagram
+    </div>
+    <div style="width:80px;"></div>
+  </nav>
+
+  <div class="hero">
+    <div class="hero-badge">✦ Instagram</div>
+    <h1>Escolha seu <em>serviço</em></h1>
+    <p>Selecione o serviço ideal para turbinar seu Instagram com entrega rápida e segura.</p>
+  </div>
+
+  <div class="filter-bar">
+    <input type="text" class="search-input" id="searchInput" placeholder="🔍  Buscar serviço..." oninput="filtrarServicos()">
+    <span class="results-count" id="resultsCount"></span>
+  </div>
+
+  <div class="container">
+    <div id="content">
+      <div class="loading">
+        <div class="spinner"></div>
+        <span>Carregando serviços...</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let todosServicos = [];
+
+    async function carregarServicos() {
+      try {
+        const response = await fetch('/api/services');
+        if (!response.ok) throw new Error('Erro na requisição');
+        const data = await response.json();
+        if (!Array.isArray(data)) throw new Error('Formato inválido');
+
+        // Filtra só Instagram
+        todosServicos = data.filter(s =>
+          s.name && s.name.toLowerCase().includes('instagram')
+        );
+
+        if (todosServicos.length === 0) {
+          // Se não encontrou com filtro, mostra todos
+          todosServicos = data;
+        }
+
+        renderServicos(todosServicos);
+
+      } catch (err) {
+        document.getElementById('content').innerHTML = `
+          <div class="error-box">
+            <strong>Não foi possível carregar os serviços.</strong><br>
+            <small style="margin-top:8px;display:block;">Tente novamente em instantes.</small>
+          </div>
+        `;
+      }
+    }
+
+    function renderServicos(lista) {
+      const count = document.getElementById('resultsCount');
+      count.textContent = `${lista.length} serviço${lista.length !== 1 ? 's' : ''} encontrado${lista.length !== 1 ? 's' : ''}`;
+
+      if (lista.length === 0) {
+        document.getElementById('content').innerHTML = `
+          <div class="services-grid">
+            <div class="no-results">Nenhum serviço encontrado para sua busca.</div>
+          </div>`;
+        return;
+      }
+
+      const html = `<div class="services-grid">` + lista.map(s => `
+        <div class="service-card">
+          <div class="service-header">
+            <div class="service-name">${s.name}</div>
+            <div class="service-id">#${s.service}</div>
+          </div>
+          <div class="service-footer">
+            <div>
+              <div class="service-price">R$ ${parseFloat(s.rate).toFixed(2)} <span style="font-size:11px;color:var(--text-muted);-webkit-text-fill-color:var(--text-muted);font-family:'DM Sans';">/1000</span></div>
+              <div class="service-qty">Mín: ${s.min} — Máx: ${Number(s.max).toLocaleString('pt-BR')}</div>
+            </div>
+            <button class="service-btn" onclick="pedido(${s.service}, '${s.name.replace(/'/g,"\\'")}')">Pedir →</button>
+          </div>
+        </div>
+      `).join('') + `</div>`;
+
+      document.getElementById('content').innerHTML = html;
+    }
+
+    function filtrarServicos() {
+      const busca = document.getElementById('searchInput').value.toLowerCase();
+      const filtrado = todosServicos.filter(s =>
+        s.name.toLowerCase().includes(busca)
+      );
+      renderServicos(filtrado);
+    }
+
+    function pedido(id, nome) {
+      alert(`Serviço selecionado: ${nome}\n\nEm breve você poderá fazer pedidos diretamente aqui!`);
+    }
+
+    carregarServicos();
+  </script>
+
+</body>
+</html>
