@@ -4,562 +4,697 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Fazer Pedido</title>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
       --purple: #8B2FC9;
       --purple-light: #A855F7;
       --pink: #E040FB;
-      --bg: #0A0A0F;
-      --bg2: #111118;
-      --card: #1A1A26;
-      --card-border: #2A2A3A;
-      --text: #F0F0FF;
-      --text-muted: #8888AA;
+      --bg: #0f0f18;
+      --card: #1a1a2e;
+      --card2: #16213e;
+      --border: #2a2a45;
+      --text: #f0f0ff;
+      --muted: #8888aa;
       --green: #22c55e;
       --pix: #32BCAD;
     }
 
     * { margin:0; padding:0; box-sizing:border-box; }
-    body { background:#f0eef8; font-family:'DM Sans',sans-serif; min-height:100vh; }
+    body { background:#f5f3ff; font-family:'DM Sans',sans-serif; min-height:100vh; }
 
-    /* LAYOUT PRINCIPAL */
-    .page {
-      max-width: 980px;
-      margin: 0 auto;
-      padding: 32px 16px;
-      display: grid;
-      grid-template-columns: 1fr 340px;
-      gap: 20px;
-      align-items: start;
+    /* ── STEP 1 ── */
+    #step1 {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      background: #f0eef8;
     }
 
-    /* CARD BASE */
-    .card {
-      background: #1a1a26;
-      border-radius: 16px;
+    .step1-wrap {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 24px;
+      width: 100%;
+      max-width: 900px;
+    }
+
+    /* Card esquerdo */
+    .s1-card {
+      background: var(--card);
+      border-radius: 20px;
       overflow: hidden;
     }
 
-    /* ===================== LADO ESQUERDO ===================== */
-
-    /* Cabeçalho do serviço */
-    .service-header {
-      background: #1a1a26;
-      padding: 28px 28px 0;
+    .s1-top {
+      padding: 36px 36px 24px;
       text-align: center;
+      background: linear-gradient(160deg, #1a1a2e, #2a1040);
     }
-    .service-icon {
-      width: 48px; height: 48px; border-radius: 12px;
+
+    .ig-icon-lg {
+      width: 56px; height: 56px; border-radius: 14px;
       background: linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);
       display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 12px;
-    }
-    .service-header h2 { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 8px; }
-    .service-name-badge {
-      display: inline-block;
-      background: rgba(168,85,247,.15); border: 1px solid rgba(168,85,247,.3);
-      color: var(--purple-light); font-size: 12px; padding: 4px 12px; border-radius: 20px;
-      margin-bottom: 20px;
+      margin: 0 auto 16px;
     }
 
-    /* Quantidade */
-    .qty-section { padding: 20px 28px; background: #1a1a26; }
-    .qty-label { font-size: 13px; color: var(--text-muted); margin-bottom: 12px; text-align:center; }
-    .qty-row {
-      display: flex; align-items: center; justify-content: center; gap: 0;
-      background: #13131e; border-radius: 12px; overflow: hidden;
-      border: 1px solid var(--card-border);
+    .s1-top h2 {
+      font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 12px;
     }
+
+    .discount-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(168,85,247,.2); border: 1px solid rgba(168,85,247,.4);
+      color: var(--purple-light); font-size: 13px; font-weight: 600;
+      padding: 6px 16px; border-radius: 30px;
+    }
+
+    /* Seletor de quantidade */
+    .qty-wrap { padding: 32px 36px; }
+
+    .qty-row {
+      display: flex; align-items: center; gap: 0;
+      background: #0f0f18; border-radius: 14px;
+      border: 2px solid var(--border); overflow: hidden;
+    }
+
     .qty-btn {
-      width: 56px; height: 56px; border: none; cursor: pointer;
-      font-size: 22px; font-weight: 700; color: #fff;
+      width: 72px; height: 72px; border: none; cursor: pointer;
+      font-size: 28px; font-weight: 700; color: #fff;
       background: linear-gradient(135deg, var(--purple), var(--purple-light));
       transition: opacity .2s; flex-shrink: 0;
     }
     .qty-btn:hover { opacity: .8; }
+
     .qty-input {
-      flex: 1; text-align: center; font-size: 24px; font-weight: 700;
+      flex: 1; text-align: center;
+      font-size: 32px; font-weight: 800;
       color: #fff; background: transparent; border: none; outline: none;
-      font-family: 'Orbitron', sans-serif; padding: 0 8px;
+      font-family: 'Orbitron', sans-serif;
     }
-    .qty-limits { text-align: center; font-size: 12px; color: var(--text-muted); margin-top: 8px; }
+
+    .qty-limits {
+      text-align: center; font-size: 13px; color: var(--muted); margin-top: 10px;
+    }
 
     /* Requisitos */
-    .req-section { margin: 0 28px 20px; border-radius: 10px; overflow: hidden; background: #13131e; border: 1px solid #2a2a3a; }
+    .req-wrap { margin: 0 36px 24px; border-radius: 12px; overflow: hidden; background: #0f0f18; border: 1px solid var(--border); }
     .req-toggle {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 12px 16px; cursor: pointer; color: var(--purple-light); font-size: 13px; font-weight: 600;
+      padding: 14px 18px; cursor: pointer; color: var(--purple-light);
+      font-size: 14px; font-weight: 600;
     }
     .req-toggle span { display:flex; align-items:center; gap:8px; }
-    .req-body { padding: 0 16px 12px; display: none; }
-    .req-body.open { display: block; }
-    .req-body li { font-size: 12px; color: var(--text-muted); margin-bottom: 6px; list-style: none; padding-left: 12px; position: relative; }
-    .req-body li::before { content: '•'; position: absolute; left: 0; color: var(--purple-light); }
-    .req-body li b { color: #fff; }
+    .req-body { padding: 0 18px 14px; }
+    .req-body li { font-size: 13px; color: var(--muted); margin-bottom: 6px; list-style:none; padding-left:14px; position:relative; }
+    .req-body li::before { content:'•'; position:absolute; left:0; color:var(--purple-light); }
+    .req-body li b { color:#fff; }
 
-    /* Link do perfil */
-    .link-section { padding: 0 28px 20px; background: #1a1a26; }
-    .link-section label { font-size: 13px; color: var(--text-muted); display: block; margin-bottom: 8px; }
-    .link-input-wrap { position: relative; }
-    .link-input-wrap svg { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); }
-    .link-input {
-      width: 100%; background: #13131e; border: 1px solid var(--card-border);
-      color: #fff; padding: 11px 14px 11px 38px; border-radius: 8px;
-      font-size: 14px; font-family: 'DM Sans', sans-serif; outline: none;
-      transition: border-color .2s;
-    }
-    .link-input:focus { border-color: var(--purple-light); }
-    .link-input::placeholder { color: #555; }
-
-    /* Email / Whats */
-    .contact-section { padding: 0 28px 20px; background: #1a1a26; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    .contact-section label { font-size: 13px; color: var(--text-muted); display: block; margin-bottom: 6px; }
-    .contact-input {
-      width: 100%; background: #13131e; border: 1px solid var(--card-border);
-      color: #fff; padding: 10px 14px; border-radius: 8px;
-      font-size: 14px; font-family: 'DM Sans', sans-serif; outline: none;
-      transition: border-color .2s;
-    }
-    .contact-input:focus { border-color: var(--purple-light); }
-    .contact-input::placeholder { color: #555; }
-
-    /* Pagamento */
-    .pay-section { padding: 0 28px 20px; background: #1a1a26; }
-    .pay-section label { font-size: 13px; color: var(--text-muted); display: block; margin-bottom: 10px; }
-    .pay-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .pay-opt {
-      border: 2px solid var(--card-border); border-radius: 10px;
-      padding: 12px 14px; cursor: pointer; display: flex; align-items: center; gap: 10px;
-      transition: border-color .2s, background .2s; background: #13131e;
-    }
-    .pay-opt.selected { border-color: var(--pix); background: rgba(50,188,173,.08); }
-    .pay-opt input { display: none; }
-    .pay-opt-label { font-size: 14px; font-weight: 600; color: #fff; }
-    .pay-opt-sub { font-size: 11px; color: var(--text-muted); }
-    .pix-badge { background: var(--pix); color: #fff; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px; }
-
-    /* Termos */
-    .terms-section { padding: 0 28px 20px; background: #1a1a26; }
-    .terms-check { display: flex; align-items: center; gap: 10px; cursor: pointer; }
-    .terms-check input { width: 16px; height: 16px; accent-color: var(--purple-light); cursor: pointer; }
-    .terms-check span { font-size: 12px; color: var(--text-muted); }
-    .terms-check a { color: var(--purple-light); text-decoration: none; }
-
-    /* Botão finalizar */
-    .btn-finalizar {
-      width: calc(100% - 56px); margin: 0 28px 28px;
-      display: block; background: linear-gradient(135deg, var(--purple), var(--pink));
-      color: #fff; border: none; border-radius: 12px;
-      padding: 16px; font-size: 16px; font-weight: 700;
+    /* Botão adicionar */
+    .btn-add {
+      display: block; width: calc(100% - 72px); margin: 0 36px 36px;
+      background: linear-gradient(135deg, var(--purple), var(--pink));
+      color: #fff; border: none; border-radius: 14px;
+      padding: 18px; font-size: 17px; font-weight: 700;
       cursor: pointer; font-family: 'DM Sans', sans-serif;
       transition: opacity .2s, transform .15s;
-      display: flex; align-items: center; justify-content: center; gap: 8px;
+      letter-spacing: .3px;
     }
-    .btn-finalizar:hover { opacity: .9; transform: translateY(-1px); }
+    .btn-add:hover { opacity: .9; transform: translateY(-2px); }
 
-    /* ===================== UPSELL ===================== */
-    .upsell-card {
-      background: #1a1a26; border-radius: 16px;
-      border: 1px solid #2a1a3e; margin-top: 16px; overflow: hidden;
+    /* Card resumo */
+    .s1-summary {
+      background: var(--card);
+      border-radius: 20px; overflow: hidden;
+      position: sticky; top: 20px;
     }
-    .upsell-header {
-      background: linear-gradient(135deg, #1a0a2e, #2a1040);
-      padding: 14px 20px; display: flex; align-items: center; gap: 10px;
+
+    .sum-header {
+      background: linear-gradient(135deg, var(--purple), var(--pink));
+      padding: 18px 24px; display: flex; align-items: center; justify-content: space-between;
     }
-    .upsell-header h3 { font-size: 14px; font-weight: 700; color: #fff; }
-    .upsell-header p { font-size: 12px; color: var(--text-muted); }
-    .fire-icon { font-size: 20px; }
+    .sum-header h3 { font-size: 16px; font-weight: 700; color: #fff; }
+    .sum-secure { display:flex; align-items:center; gap:5px; font-size:12px; color:rgba(255,255,255,.8); }
+
+    .sum-item { padding: 20px 24px; display:flex; align-items:center; gap:14px; border-bottom:1px solid var(--border); }
+    .sum-ig { width:42px; height:42px; border-radius:10px; flex-shrink:0; background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); display:flex; align-items:center; justify-content:center; }
+    .sum-item-info { flex:1; min-width:0; }
+    .sum-item-name { font-size:14px; font-weight:600; color:#fff; }
+    .sum-item-plat { font-size:12px; color:var(--muted); margin-top:2px; }
+    .sum-item-price { font-size:16px; font-weight:700; color:#fff; font-family:'Orbitron',sans-serif; }
+
+    .sum-totals { padding: 18px 24px; }
+    .sum-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; font-size:14px; color:var(--muted); }
+    .sum-row.total { color:#fff; font-size:18px; font-weight:800; margin-top:14px; padding-top:14px; border-top:1px solid var(--border); font-family:'Orbitron',sans-serif; }
+    .sum-row.discount { color:var(--green); }
+    .pix-tag { background:var(--pix); color:#fff; font-size:10px; font-weight:700; padding:2px 7px; border-radius:4px; }
+
+    /* ── STEP 2 ── */
+    #step2 { display: none; min-height: 100vh; background: #f0eef8; padding: 40px 20px; }
+
+    .step2-wrap {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 24px;
+      max-width: 1000px;
+      margin: 0 auto;
+      align-items: start;
+    }
+
+    .s2-card {
+      background: var(--card);
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .s2-card-header {
+      padding: 24px 32px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 14px;
+    }
+    .s2-card-header h2 { font-size: 18px; font-weight: 700; color: #fff; }
+
+    .back-btn {
+      background: none; border: 1px solid var(--border);
+      color: var(--purple-light); padding: 8px 14px; border-radius: 8px;
+      font-size: 13px; font-weight: 600; cursor: pointer;
+      font-family: 'DM Sans', sans-serif; transition: border-color .2s;
+    }
+    .back-btn:hover { border-color: var(--purple-light); }
+
+    /* Item do pedido no step2 */
+    .order-item {
+      padding: 20px 32px; display:flex; align-items:center; gap:14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .order-item-info { flex:1; }
+    .order-item-name { font-size:14px; font-weight:600; color:#fff; }
+    .order-item-qty { font-size:12px; color:var(--muted); margin-top:3px; }
+    .remove-btn { color:#f87171; font-size:13px; cursor:pointer; background:none; border:none; font-family:'DM Sans',sans-serif; }
+
+    /* Link perfil */
+    .s2-section { padding: 24px 32px; border-bottom: 1px solid var(--border); }
+    .s2-section label { font-size:13px; color:var(--muted); display:block; margin-bottom:10px; font-weight:500; }
+    .s2-input-wrap { position:relative; }
+    .s2-input-wrap svg { position:absolute; left:14px; top:50%; transform:translateY(-50%); }
+    .s2-input {
+      width:100%; background:#0f0f18; border:1px solid var(--border);
+      color:#fff; padding:13px 14px 13px 40px; border-radius:10px;
+      font-size:14px; font-family:'DM Sans',sans-serif; outline:none; transition:border-color .2s;
+    }
+    .s2-input:focus { border-color:var(--purple-light); }
+    .s2-input::placeholder { color:#444; }
+    .s2-hints { margin-top:10px; }
+    .s2-hints li { font-size:12px; color:var(--muted); list-style:none; padding-left:14px; position:relative; margin-bottom:4px; }
+    .s2-hints li::before { content:'•'; position:absolute; left:0; color:var(--purple-light); }
+    .s2-hints li b { color:#fff; }
+
+    /* Upsell */
+    .upsell-wrap { margin: 0 32px 24px; border-radius: 14px; overflow:hidden; border:1px solid #3a1a5e; }
+    .upsell-hdr {
+      background: linear-gradient(135deg,#1a0a2e,#2a1040);
+      padding:16px 20px; display:flex; align-items:center; gap:10px;
+    }
+    .upsell-hdr h3 { font-size:15px; font-weight:700; color:#fff; }
+    .upsell-hdr p { font-size:12px; color:var(--muted); }
 
     .upsell-item {
-      padding: 14px 20px; border-bottom: 1px solid #1e1e2e;
-      display: flex; align-items: center; gap: 12px;
+      padding:16px 20px; border-bottom:1px solid var(--border);
+      display:flex; align-items:center; gap:12px;
+      background: #13131e;
     }
-    .upsell-item:last-child { border-bottom: none; }
-    .upsell-ig-icon {
-      width: 40px; height: 40px; border-radius: 10px; flex-shrink: 0;
-      background: linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);
-      display: flex; align-items: center; justify-content: center;
+    .upsell-item:last-child { border-bottom:none; }
+    .upsell-ig { width:44px; height:44px; border-radius:10px; flex-shrink:0; background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); display:flex; align-items:center; justify-content:center; }
+    .upsell-info { flex:1; min-width:0; }
+    .upsell-badge { font-size:10px; font-weight:700; padding:2px 8px; border-radius:20px; display:inline-block; margin-bottom:4px; }
+    .badge-up { background:rgba(168,85,247,.2); color:var(--purple-light); border:1px solid rgba(168,85,247,.3); }
+    .badge-hot { background:rgba(239,68,68,.2); color:#f87171; border:1px solid rgba(239,68,68,.3); }
+    .badge-eco { background:rgba(34,197,94,.2); color:#4ade80; border:1px solid rgba(34,197,94,.3); }
+    .upsell-name { font-size:13px; font-weight:600; color:#fff; }
+    .upsell-qty-label { font-size:11px; color:var(--muted); }
+    .upsell-prices { text-align:right; margin-right:10px; flex-shrink:0; }
+    .upsell-old { font-size:11px; color:var(--muted); text-decoration:line-through; }
+    .upsell-new { font-size:16px; font-weight:800; color:var(--green); font-family:'Orbitron',sans-serif; }
+    .upsell-add {
+      background:linear-gradient(135deg,var(--purple),var(--purple-light));
+      color:#fff; border:none; border-radius:8px; padding:9px 14px;
+      font-size:12px; font-weight:700; cursor:pointer; white-space:nowrap;
+      font-family:'DM Sans',sans-serif; transition:opacity .2s;
     }
-    .upsell-info { flex: 1; min-width: 0; }
-    .upsell-name { font-size: 13px; font-weight: 600; color: #fff; }
-    .upsell-qty { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
-    .upsell-badge {
-      font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 20px; margin-bottom: 4px; display: inline-block;
-    }
-    .badge-upgrade { background: rgba(168,85,247,.2); color: var(--purple-light); border: 1px solid rgba(168,85,247,.3); }
-    .badge-popular { background: rgba(239,68,68,.2); color: #f87171; border: 1px solid rgba(239,68,68,.3); }
-    .badge-economy { background: rgba(34,197,94,.2); color: #4ade80; border: 1px solid rgba(34,197,94,.3); }
-    .upsell-price-col { text-align: right; flex-shrink: 0; }
-    .upsell-old-price { font-size: 11px; color: var(--text-muted); text-decoration: line-through; }
-    .upsell-new-price { font-size: 15px; font-weight: 700; color: var(--green); font-family: 'Orbitron', sans-serif; }
-    .upsell-add-btn {
-      background: linear-gradient(135deg, var(--purple), var(--purple-light));
-      color: #fff; border: none; border-radius: 8px;
-      padding: 8px 14px; font-size: 12px; font-weight: 700;
-      cursor: pointer; white-space: nowrap; font-family: 'DM Sans', sans-serif;
-      transition: opacity .2s;
-    }
-    .upsell-add-btn:hover { opacity: .8; }
-    .upsell-add-btn.added { background: var(--green); }
+    .upsell-add:hover { opacity:.8; }
+    .upsell-add.added { background:var(--green); }
 
-    /* ===================== LADO DIREITO (RESUMO) ===================== */
-    .summary-card { background: #1a1a26; border-radius: 16px; overflow: hidden; position: sticky; top: 20px; }
-    .summary-header {
-      background: linear-gradient(135deg, var(--purple), var(--pink));
-      padding: 14px 20px; display: flex; align-items: center; justify-content: space-between;
+    /* Contato */
+    .contact-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+
+    /* Pagamento */
+    .pay-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .pay-opt {
+      border:2px solid var(--border); border-radius:12px;
+      padding:14px 16px; cursor:pointer; display:flex; align-items:center; gap:10px;
+      transition:border-color .2s, background .2s; background:#0f0f18;
     }
-    .summary-header h3 { font-size: 15px; font-weight: 700; color: #fff; }
-    .secure-badge { display: flex; align-items: center; gap: 5px; font-size: 11px; color: rgba(255,255,255,.8); }
+    .pay-opt.selected { border-color:var(--pix); background:rgba(50,188,173,.08); }
+    .pay-opt-label { font-size:14px; font-weight:600; color:#fff; }
+    .pay-opt-sub { font-size:11px; color:var(--muted); }
+    .pix-chip { background:var(--pix); color:#fff; font-size:10px; font-weight:700; padding:3px 7px; border-radius:4px; }
+    .pay-note { margin-top:12px; font-size:12px; color:var(--muted); line-height:1.5; }
 
-    .summary-item {
-      padding: 16px 20px; display: flex; align-items: center; gap: 12px;
-      border-bottom: 1px solid #1e1e2e;
+    /* Termos */
+    .terms-label { display:flex; align-items:center; gap:10px; cursor:pointer; }
+    .terms-label input { width:17px; height:17px; accent-color:var(--purple-light); cursor:pointer; }
+    .terms-label span { font-size:13px; color:var(--muted); }
+    .terms-label a { color:var(--purple-light); text-decoration:none; }
+
+    /* Botão gerar pix */
+    .btn-pix {
+      display:flex; align-items:center; justify-content:center; gap:10px;
+      width:100%; background:linear-gradient(135deg,var(--purple),var(--pink));
+      color:#fff; border:none; border-radius:14px;
+      padding:20px; font-size:17px; font-weight:700;
+      cursor:pointer; font-family:'DM Sans',sans-serif;
+      transition:opacity .2s, transform .15s; margin-top:4px;
     }
-    .summary-ig-icon {
-      width: 36px; height: 36px; border-radius: 8px; flex-shrink: 0;
-      background: linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);
-      display: flex; align-items: center; justify-content: center;
+    .btn-pix:hover { opacity:.9; transform:translateY(-2px); }
+
+    /* Resumo step2 */
+    .s2-summary {
+      background:var(--card); border-radius:20px; overflow:hidden;
+      position:sticky; top:20px;
     }
-    .summary-item-info { flex: 1; min-width: 0; }
-    .summary-item-name { font-size: 13px; font-weight: 600; color: #fff; }
-    .summary-item-plat { font-size: 11px; color: var(--text-muted); }
-    .summary-item-price { text-align: right; }
-    .summary-item-price .new { font-size: 14px; font-weight: 700; color: #fff; }
-    .summary-item-price .old { font-size: 11px; color: var(--text-muted); text-decoration: line-through; }
+    .s2-sum-hdr {
+      padding:16px 22px; display:flex; align-items:center; justify-content:space-between;
+      border-bottom:1px solid var(--border);
+    }
+    .s2-sum-hdr h3 { font-size:15px; font-weight:700; color:#fff; }
+    .s2-sum-count { font-size:12px; color:var(--muted); }
+    .s2-sum-item { padding:16px 22px; display:flex; align-items:center; gap:12px; border-bottom:1px solid var(--border); }
+    .s2-sum-ig { width:38px; height:38px; border-radius:9px; flex-shrink:0; background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); display:flex; align-items:center; justify-content:center; }
+    .s2-sum-info { flex:1; min-width:0; }
+    .s2-sum-name { font-size:13px; font-weight:600; color:#fff; }
+    .s2-sum-plat { font-size:11px; color:var(--muted); }
+    .s2-sum-price { font-size:14px; font-weight:700; color:#fff; }
+    .s2-totals { padding:18px 22px; }
+    .s2-row { display:flex; justify-content:space-between; font-size:13px; color:var(--muted); margin-bottom:10px; }
+    .s2-row.total { color:#fff; font-size:17px; font-weight:800; padding-top:14px; margin-top:4px; border-top:1px solid var(--border); font-family:'Orbitron',sans-serif; }
+    .s2-row.disc { color:var(--green); }
 
-    .summary-totals { padding: 16px 20px; }
-    .summary-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 13px; color: var(--text-muted); }
-    .summary-row.total { color: #fff; font-size: 16px; font-weight: 700; margin-top: 12px; padding-top: 12px; border-top: 1px solid #2a2a3a; }
-    .discount-row { color: var(--green); }
-    .pix-tag { background: var(--pix); color: #fff; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px; }
+    /* Spinner */
+    .loading { display:flex; flex-direction:column; align-items:center; padding:40px; gap:12px; color:var(--muted); }
+    .spinner { width:32px; height:32px; border:3px solid var(--border); border-top-color:var(--purple-light); border-radius:50%; animation:spin .8s linear infinite; }
+    @keyframes spin { to{transform:rotate(360deg)} }
 
-    /* LOADING */
-    .loading { display:flex; flex-direction:column; align-items:center; padding:40px; gap:12px; color:var(--text-muted); }
-    .spinner { width:32px; height:32px; border:3px solid #2a2a3a; border-top-color:var(--purple-light); border-radius:50%; animation:spin .8s linear infinite; }
-    @keyframes spin { to { transform:rotate(360deg); } }
-
-    /* MOBILE */
-    @media (max-width: 700px) {
-      .page { grid-template-columns: 1fr; padding: 16px 12px; }
-      .contact-section { grid-template-columns: 1fr; }
-      .summary-card { position: static; }
+    /* Mobile */
+    @media(max-width:720px){
+      .step1-wrap, .step2-wrap { grid-template-columns:1fr; }
+      .s1-summary, .s2-summary { position:static; }
+      .s1-top { padding:28px 24px 20px; }
+      .qty-wrap { padding:24px; }
+      .req-wrap { margin:0 24px 20px; }
+      .btn-add { width:calc(100% - 48px); margin:0 24px 28px; }
+      .s2-section { padding:18px 22px; }
+      .upsell-wrap { margin:0 22px 20px; }
+      .contact-grid { grid-template-columns:1fr; }
     }
   </style>
 </head>
 <body>
 
-<div class="page">
+<!-- ════════════ STEP 1 ════════════ -->
+<div id="step1">
+  <div class="step1-wrap">
 
-  <!-- ========== COLUNA ESQUERDA ========== -->
-  <div>
-    <!-- Card principal do serviço -->
-    <div class="card" id="main-card">
-      <div class="loading"><div class="spinner"></div><span>Carregando serviço...</span></div>
-    </div>
-
-    <!-- Upsell -->
-    <div class="upsell-card" id="upsell-card" style="display:none;">
-      <div class="upsell-header">
-        <span class="fire-icon">🔥</span>
-        <div>
-          <h3>Complete seu pedido</h3>
-          <p>Clientes que compraram isso também levaram:</p>
+    <!-- Esquerda -->
+    <div class="s1-card">
+      <div class="s1-top">
+        <div class="ig-icon-lg">
+          <svg viewBox="0 0 24 24" fill="white" width="28" height="28"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
         </div>
-      </div>
-      <div id="upsell-items"></div>
-    </div>
-  </div>
-
-  <!-- ========== COLUNA DIREITA (RESUMO) ========== -->
-  <div class="summary-card" id="summary-card">
-    <div class="summary-header">
-      <h3>Seu Pedido</h3>
-      <span class="secure-badge">🔒 Compra segura</span>
-    </div>
-    <div id="summary-body">
-      <div class="loading"><div class="spinner"></div></div>
-    </div>
-  </div>
-
-</div>
-
-<script>
-  // Pega parâmetros da URL: ?id=4973&name=...&rate=0.42&min=10&max=250000
-  const params = new URLSearchParams(location.search);
-  const serviceId   = params.get('id') || '';
-  const serviceName = params.get('name') || 'Serviço Instagram';
-  const serviceRate = parseFloat(params.get('rate')) || 0.50;
-  const serviceMin  = parseInt(params.get('min'))  || 10;
-  const serviceMax  = parseInt(params.get('max'))  || 100000;
-
-  const PIX_DISCOUNT = 0.05; // 5%
-  const UPSELL_FAKE_DISCOUNT = 0.30; // 30% de "desconto" visual no upsell
-
-  let qty = Math.max(serviceMin, 100);
-  let payMethod = 'pix';
-  let upsellAdded = {};
-  let upsellServicos = [];
-
-  // ─── Calcula preço ───────────────────────────────
-  function calcPreco(rate, quantidade) {
-    return (rate / 1000) * quantidade;
-  }
-
-  function fmt(val) {
-    return val.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-  }
-
-  // ─── Renderiza card principal ─────────────────────
-  function renderMain() {
-    const preco = calcPreco(serviceRate, qty);
-    const precoComDesconto = payMethod === 'pix' ? preco * (1 - PIX_DISCOUNT) : preco;
-
-    document.getElementById('main-card').innerHTML = `
-      <div class="service-header">
-        <div class="service-icon">
-          <svg viewBox="0 0 24 24" fill="white" width="24" height="24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-        </div>
-        <h2>Precisa de quantos?</h2>
-        <div class="service-name-badge">${serviceName}</div>
+        <h2 id="s1-title">Precisa de quantos?</h2>
+        <div class="discount-badge">💸 Mais quantidade = maior desconto</div>
       </div>
 
-      <div class="qty-section">
-        <div class="qty-label">Mais quantidade = maior desconto</div>
+      <div class="qty-wrap">
         <div class="qty-row">
           <button class="qty-btn" onclick="changeQty(-100)">−</button>
-          <input class="qty-input" type="number" id="qtyInput" value="${qty}"
-            min="${serviceMin}" max="${serviceMax}"
-            onchange="setQty(parseInt(this.value))"
-            oninput="setQty(parseInt(this.value))">
+          <input class="qty-input" type="number" id="qtyInput" value="350" oninput="setQty(parseInt(this.value))">
           <button class="qty-btn" onclick="changeQty(+100)">+</button>
         </div>
-        <div class="qty-limits">Mínimo: ${serviceMin.toLocaleString('pt-BR')} — Máximo: ${serviceMax.toLocaleString('pt-BR')}</div>
+        <div class="qty-limits" id="qtyLimits"></div>
       </div>
 
-      <div class="req-section">
-        <div class="req-toggle" onclick="toggleReq(this)">
+      <div class="req-wrap">
+        <div class="req-toggle" onclick="toggleReq()">
           <span>📋 Requisitos para receber o serviço</span>
           <span id="req-arrow">▲</span>
         </div>
-        <ul class="req-body open" id="req-body">
+        <ul class="req-body" id="req-body">
           <li>Perfil precisa estar <b>público</b>. Se estiver privado, os serviços não chegam.</li>
           <li>Reposição, quando disponível, segue as regras do serviço contratado e análise do suporte.</li>
         </ul>
       </div>
 
-      <div class="link-section">
-        <label>Link do perfil do Instagram</label>
-        <div class="link-input-wrap">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
-          <input class="link-input" type="url" id="profileLink" placeholder="https://instagram.com/seuperfil">
+      <button class="btn-add" onclick="irParaStep2()">Adicionar ao carrinho →</button>
+    </div>
+
+    <!-- Resumo direita -->
+    <div class="s1-summary">
+      <div class="sum-header">
+        <h3>Seu Pedido</h3>
+        <span class="sum-secure">🔒 Compra segura</span>
+      </div>
+      <div class="sum-item">
+        <div class="sum-ig">
+          <svg viewBox="0 0 24 24" fill="white" width="20" height="20"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+        </div>
+        <div class="sum-item-info">
+          <div class="sum-item-name" id="sum-name">—</div>
+          <div class="sum-item-plat">Instagram</div>
+        </div>
+        <div class="sum-item-price" id="sum-price">—</div>
+      </div>
+      <div class="sum-totals">
+        <div class="sum-row"><span>Subtotal</span><span id="sum-sub">—</span></div>
+        <div class="sum-row discount"><span><span class="pix-tag">PIX</span> 5% de desconto</span><span id="sum-disc">—</span></div>
+        <div class="sum-row total"><span>Total</span><span id="sum-total">—</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ════════════ STEP 2 ════════════ -->
+<div id="step2">
+  <div class="step2-wrap">
+
+    <!-- Esquerda -->
+    <div>
+      <div class="s2-card">
+        <div class="s2-card-header">
+          <button class="back-btn" onclick="voltarStep1()">← Voltar</button>
+          <h2>Confirme e finalize seu pedido</h2>
+        </div>
+
+        <!-- Item principal -->
+        <div class="order-item">
+          <div class="sum-ig">
+            <svg viewBox="0 0 24 24" fill="white" width="20" height="20"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          </div>
+          <div class="order-item-info">
+            <div class="order-item-name" id="s2-item-name">—</div>
+            <div class="order-item-qty" id="s2-item-qty">—</div>
+          </div>
+          <button class="remove-btn" onclick="voltarStep1()">Remover</button>
+        </div>
+
+        <!-- Link perfil -->
+        <div class="s2-section">
+          <label>Link do perfil do Instagram</label>
+          <div class="s2-input-wrap">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+            <input class="s2-input" type="url" id="profileLink" placeholder="https://instagram.com/seuperfil">
+          </div>
+          <ul class="s2-hints">
+            <li>Preencha o link corretamente para cada item</li>
+            <li>Seu perfil precisa estar <b>público</b></li>
+          </ul>
         </div>
       </div>
 
-      <div class="contact-section">
-        <div>
-          <label>E-mail</label>
-          <input class="contact-input" type="email" id="emailInput" placeholder="seuemail@gmail.com">
-        </div>
-        <div>
-          <label>WhatsApp</label>
-          <input class="contact-input" type="tel" id="whatsInput" placeholder="(00) 00000-0000">
-        </div>
-      </div>
-
-      <div class="pay-section">
-        <label>Método de pagamento</label>
-        <div class="pay-options">
-          <div class="pay-opt selected" id="opt-pix" onclick="selectPay('pix')">
-            <span class="pix-badge">PIX</span>
+      <!-- Upsell -->
+      <div style="margin-top:16px;">
+        <div class="upsell-wrap" id="upsell-wrap" style="display:none;">
+          <div class="upsell-hdr">
+            <span style="font-size:22px">🔥</span>
             <div>
-              <div class="pay-opt-label">Pix</div>
-              <div class="pay-opt-sub">5% de desconto</div>
+              <h3>Complete seu pedido</h3>
+              <p>Clientes que compraram isso também levaram:</p>
             </div>
           </div>
-          <div class="pay-opt" id="opt-card" onclick="selectPay('card')">
-            <span style="font-size:20px">💳</span>
+          <div id="upsell-items"></div>
+        </div>
+      </div>
+
+      <!-- Contato + Pagamento -->
+      <div class="s2-card" style="margin-top:16px;">
+        <div class="s2-section">
+          <div class="contact-grid">
             <div>
-              <div class="pay-opt-label">Cartão de Crédito</div>
-              <div class="pay-opt-sub">Sem desconto</div>
+              <label>E-mail</label>
+              <div class="s2-input-wrap">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
+                <input class="s2-input" type="email" id="emailInput" placeholder="seuemail@gmail.com">
+              </div>
+            </div>
+            <div>
+              <label>WhatsApp</label>
+              <div class="s2-input-wrap">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.07 1.18 2 2 0 012.03 0h3a2 2 0 012 1.72c.13 1 .37 1.98.72 2.92a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.16-1.16a2 2 0 012.11-.45c.94.35 1.92.59 2.92.72A2 2 0 0122 16.92z"/></svg>
+                <input class="s2-input" type="tel" id="whatsInput" placeholder="(00) 00000-0000" style="padding-left:40px">
+              </div>
             </div>
           </div>
         </div>
-        ${payMethod === 'pix' ? `<p style="font-size:11px;color:var(--text-muted);margin-top:10px;">Compra única via PIX, sem assinatura recorrente. O valor total é exibido no resumo.</p>` : ''}
-      </div>
 
-      <div class="terms-section">
-        <label class="terms-check">
-          <input type="checkbox" id="termsCheck">
-          <span>Aceito os <a href="#">Termos de Uso</a> e <a href="#">Política de Reembolso</a></span>
-        </label>
-      </div>
+        <div class="s2-section">
+          <label>Método de pagamento</label>
+          <div class="pay-grid">
+            <div class="pay-opt selected" id="opt-pix" onclick="selectPay('pix')">
+              <span class="pix-chip">PIX</span>
+              <div>
+                <div class="pay-opt-label">Pix</div>
+                <div class="pay-opt-sub">5% de desconto</div>
+              </div>
+            </div>
+            <div class="pay-opt" id="opt-card" onclick="selectPay('card')">
+              <span style="font-size:22px">💳</span>
+              <div>
+                <div class="pay-opt-label">Cartão de Crédito</div>
+                <div class="pay-opt-sub">Sem desconto</div>
+              </div>
+            </div>
+          </div>
+          <p class="pay-note" id="pay-note">Compra única via PIX, sem assinatura recorrente. O valor total do pedido é exibido no resumo antes do pagamento.</p>
+        </div>
 
-      <button class="btn-finalizar" onclick="finalizar()">
-        🔒 ${payMethod === 'pix' ? 'Gerar Pix QR Code' : 'Finalizar Pedido'}
-      </button>
-    `;
+        <div class="s2-section" style="border-bottom:none;">
+          <label class="terms-label">
+            <input type="checkbox" id="termsCheck">
+            <span>Aceito os <a href="#">Termos de Uso</a> e <a href="#">Política de Reembolso</a></span>
+          </label>
+        </div>
+
+        <div style="padding:0 32px 32px;">
+          <button class="btn-pix" onclick="finalizar()">
+            🔒 <span id="btn-pix-label">Gerar Pix QR Code</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resumo step2 -->
+    <div class="s2-summary">
+      <div class="s2-sum-hdr">
+        <h3>Seu Pedido</h3>
+        <span class="s2-sum-count" id="s2-count">1 item</span>
+      </div>
+      <div id="s2-sum-body"></div>
+      <div class="s2-totals">
+        <div class="s2-row"><span>Subtotal</span><span id="s2-sub">—</span></div>
+        <div class="s2-row disc" id="s2-disc-row"><span><span class="pix-tag">PIX</span> 5% Desconto PIX</span><span id="s2-disc">—</span></div>
+        <div class="s2-row total"><span>Total</span><span id="s2-total">—</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const params      = new URLSearchParams(location.search);
+  const serviceId   = params.get('id')   || '';
+  const serviceName = params.get('name') || 'Serviço Instagram';
+  const serviceRate = parseFloat(params.get('rate')) || 0.50;
+  const serviceMin  = parseInt(params.get('min'))    || 10;
+  const serviceMax  = parseInt(params.get('max'))    || 100000;
+
+  let qty       = Math.max(serviceMin, 350);
+  let payMethod = 'pix';
+  let upsellAdded = {};
+  let upsellServicos = [];
+
+  const PIX_DISC   = 0.05;
+  const FAKE_DISC  = 0.30;
+  const BADGES     = [
+    { label:'⬆️ Upgrade 1', cls:'badge-up' },
+    { label:'🔥 Mais Popular', cls:'badge-hot' },
+    { label:'💰 9% de economia', cls:'badge-eco' },
+  ];
+
+  function fmt(v){ return v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'}); }
+  function calcPreco(rate,q){ return (rate/1000)*q; }
+
+  // ── Step 1 render ──
+  function renderStep1(){
+    const preco   = calcPreco(serviceRate, qty);
+    const disc    = preco * PIX_DISC;
+    const total   = preco - disc;
+    const label   = qty.toLocaleString('pt-BR') + ' ' + serviceName;
+
+    document.getElementById('s1-title').textContent  = 'Precisa de quantos ' + serviceName.split(' ')[0].toLowerCase() + '?';
+    document.getElementById('qtyInput').value        = qty;
+    document.getElementById('qtyLimits').textContent = `Mínimo: ${serviceMin.toLocaleString('pt-BR')} — Máximo: ${serviceMax.toLocaleString('pt-BR')}`;
+    document.getElementById('sum-name').textContent  = label;
+    document.getElementById('sum-price').textContent = fmt(preco);
+    document.getElementById('sum-sub').textContent   = fmt(preco);
+    document.getElementById('sum-disc').textContent  = '−' + fmt(disc);
+    document.getElementById('sum-total').textContent = fmt(total);
   }
 
-  // ─── Resumo lateral ──────────────────────────────
-  function renderSummary() {
-    const preco     = calcPreco(serviceRate, qty);
-    const desconto  = payMethod === 'pix' ? preco * PIX_DISCOUNT : 0;
-    const total     = preco - desconto;
+  // ── Step 2 render ──
+  function renderStep2Summary(){
+    const preco  = calcPreco(serviceRate, qty);
+    const disc   = payMethod === 'pix' ? preco * PIX_DISC : 0;
 
-    // Extras do upsell adicionados
-    let extrasHTML = '';
-    let extrasTotal = 0;
-    for (const [id, s] of Object.entries(upsellAdded)) {
+    let extras = 0;
+    let extraHTML = '';
+    for(const [id,s] of Object.entries(upsellAdded)){
       const p = calcPreco(s.rate, s.qty);
-      extrasTotal += p;
-      extrasHTML += `
-        <div class="summary-item">
-          <div class="summary-ig-icon">
-            <svg viewBox="0 0 24 24" fill="white" width="18" height="18"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-          </div>
-          <div class="summary-item-info">
-            <div class="summary-item-name">${s.name}</div>
-            <div class="summary-item-plat">Instagram • ${s.qty.toLocaleString('pt-BR')} unid.</div>
-          </div>
-          <div class="summary-item-price">
-            <div class="new">${fmt(p)}</div>
-          </div>
+      extras += p;
+      extraHTML += `
+        <div class="s2-sum-item">
+          <div class="s2-sum-ig"><svg viewBox="0 0 24 24" fill="white" width="18" height="18"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></div>
+          <div class="s2-sum-info"><div class="s2-sum-name">${s.name}</div><div class="s2-sum-plat">Instagram</div></div>
+          <div class="s2-sum-price">${fmt(p)}</div>
         </div>`;
     }
 
-    const grandTotal = total + extrasTotal;
+    const sub   = preco + extras;
+    const grand = sub - disc;
+    const items = 1 + Object.keys(upsellAdded).length;
 
-    document.getElementById('summary-body').innerHTML = `
-      <div class="summary-item">
-        <div class="summary-ig-icon">
-          <svg viewBox="0 0 24 24" fill="white" width="18" height="18"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-        </div>
-        <div class="summary-item-info">
-          <div class="summary-item-name">${qty.toLocaleString('pt-BR')} ${serviceName}</div>
-          <div class="summary-item-plat">Instagram</div>
-        </div>
-        <div class="summary-item-price">
-          <div class="new">${fmt(preco)}</div>
-        </div>
-      </div>
-      ${extrasHTML}
-      <div class="summary-totals">
-        <div class="summary-row"><span>Subtotal</span><span>${fmt(preco + extrasTotal)}</span></div>
-        ${payMethod === 'pix' ? `<div class="summary-row discount-row"><span><span class="pix-tag">PIX</span> 5% de desconto</span><span>−${fmt(desconto)}</span></div>` : ''}
-        <div class="summary-row total"><span>Total</span><span>${fmt(grandTotal)}</span></div>
-      </div>`;
+    document.getElementById('s2-item-name').textContent = serviceName;
+    document.getElementById('s2-item-qty').textContent  = qty.toLocaleString('pt-BR') + ' unidades';
+    document.getElementById('s2-count').textContent     = items + (items===1?' item':' itens');
+
+    document.getElementById('s2-sum-body').innerHTML = `
+      <div class="s2-sum-item">
+        <div class="s2-sum-ig"><svg viewBox="0 0 24 24" fill="white" width="18" height="18"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></div>
+        <div class="s2-sum-info"><div class="s2-sum-name">${qty.toLocaleString('pt-BR')} ${serviceName}</div><div class="s2-sum-plat">Instagram</div></div>
+        <div class="s2-sum-price">${fmt(preco)}</div>
+      </div>${extraHTML}`;
+
+    document.getElementById('s2-sub').textContent   = fmt(sub);
+    document.getElementById('s2-disc').textContent  = disc > 0 ? '−'+fmt(disc) : '—';
+    document.getElementById('s2-disc-row').style.display = payMethod==='pix' ? 'flex' : 'none';
+    document.getElementById('s2-total').textContent = fmt(grand);
+    document.getElementById('btn-pix-label').textContent = payMethod==='pix' ? 'Gerar Pix QR Code' : 'Finalizar Pedido';
   }
 
-  // ─── Upsell ──────────────────────────────────────
-  async function carregarUpsell() {
-    try {
-      const res = await fetch('/api/services');
+  // ── Upsell ──
+  async function carregarUpsell(){
+    try{
+      const res  = await fetch('/api/services');
       const data = await res.json();
-      if (!Array.isArray(data)) return;
-
-      // Pega 3 serviços Instagram diferentes do atual
-      const outros = data.filter(s =>
-        s.name && s.name.toLowerCase().includes('instagram') && String(s.service) !== serviceId
-      );
-      // Embaralha e pega 3
-      upsellServicos = outros.sort(() => Math.random() - 0.5).slice(0, 3);
+      if(!Array.isArray(data)) return;
+      const outros = data.filter(s => s.name && s.name.toLowerCase().includes('instagram') && String(s.service) !== serviceId);
+      upsellServicos = outros.sort(()=>Math.random()-.5).slice(0,3);
       renderUpsell();
-    } catch {}
+    }catch{}
   }
 
-  const BADGES = [
-    { label: '⬆️ Upgrade', cls: 'badge-upgrade' },
-    { label: '🔥 Mais Popular', cls: 'badge-popular' },
-    { label: '💰 Economia', cls: 'badge-economy' },
-  ];
-
-  function renderUpsell() {
-    if (!upsellServicos.length) return;
-    document.getElementById('upsell-card').style.display = 'block';
-
-    document.getElementById('upsell-items').innerHTML = upsellServicos.map((s, i) => {
-      const qtyDefault = Math.max(parseInt(s.min) || 100, 100);
-      const precoReal  = calcPreco(parseFloat(s.rate), qtyDefault);
-      const precoFake  = precoReal / (1 - UPSELL_FAKE_DISCOUNT); // preço "sem desconto" fake
-      const badge = BADGES[i] || BADGES[0];
+  function renderUpsell(){
+    if(!upsellServicos.length) return;
+    document.getElementById('upsell-wrap').style.display='block';
+    document.getElementById('upsell-items').innerHTML = upsellServicos.map((s,i)=>{
+      const qU      = Math.max(parseInt(s.min)||100, 100);
+      const precoR  = calcPreco(parseFloat(s.rate), qU);
+      const precoF  = precoR / (1-FAKE_DISC);
+      const badge   = BADGES[i]||BADGES[0];
       const isAdded = !!upsellAdded[s.service];
-
       return `
         <div class="upsell-item">
-          <div class="upsell-ig-icon">
-            <svg viewBox="0 0 24 24" fill="white" width="18" height="18"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-          </div>
+          <div class="upsell-ig"><svg viewBox="0 0 24 24" fill="white" width="20" height="20"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></div>
           <div class="upsell-info">
-            <div><span class="upsell-badge ${badge.cls}">${badge.label}</span></div>
+            <span class="upsell-badge ${badge.cls}">${badge.label}</span>
             <div class="upsell-name">${s.name}</div>
-            <div class="upsell-qty">${qtyDefault.toLocaleString('pt-BR')} unidades</div>
+            <div class="upsell-qty-label">${qU.toLocaleString('pt-BR')} unidades</div>
           </div>
-          <div class="upsell-price-col" style="margin-right:10px;">
-            <div class="upsell-old-price">${fmt(precoFake)}</div>
-            <div class="upsell-new-price">${fmt(precoReal)}</div>
+          <div class="upsell-prices">
+            <div class="upsell-old">${fmt(precoF)}</div>
+            <div class="upsell-new">${fmt(precoR)}</div>
           </div>
-          <button class="upsell-add-btn ${isAdded ? 'added' : ''}" id="ubtn-${s.service}"
-            onclick="toggleUpsell('${s.service}', '${s.name.replace(/'/g,"\\'")}', ${parseFloat(s.rate)}, ${qtyDefault})">
-            ${isAdded ? '✓ Adicionado' : '+ Adicionar'}
+          <button class="upsell-add ${isAdded?'added':''}" id="ubtn-${s.service}"
+            onclick="toggleUpsell('${s.service}','${s.name.replace(/'/g,"\\'")}',${parseFloat(s.rate)},${qU})">
+            ${isAdded?'✓ Adicionado':'+ Adicionar'}
           </button>
         </div>`;
     }).join('');
   }
 
-  function toggleUpsell(id, name, rate, qtyU) {
-    if (upsellAdded[id]) {
-      delete upsellAdded[id];
-    } else {
-      upsellAdded[id] = { name, rate, qty: qtyU };
-    }
+  function toggleUpsell(id,name,rate,qU){
+    if(upsellAdded[id]) delete upsellAdded[id];
+    else upsellAdded[id]={name,rate,qty:qU};
     renderUpsell();
-    renderSummary();
+    renderStep2Summary();
   }
 
-  // ─── Interações ──────────────────────────────────
-  function changeQty(delta) {
-    setQty(qty + delta);
+  // ── Navegação ──
+  function irParaStep2(){
+    document.getElementById('step1').style.display='none';
+    document.getElementById('step2').style.display='block';
+    renderStep2Summary();
+    // Mostra o upsell imediatamente com loading
+    document.getElementById('upsell-wrap').style.display='block';
+    document.getElementById('upsell-items').innerHTML = '<div class="loading"><div class="spinner"></div><span>Carregando ofertas...</span></div>';
+    carregarUpsell();
+    window.scrollTo(0,0);
   }
 
-  function setQty(val) {
-    if (isNaN(val)) return;
-    qty = Math.min(serviceMax, Math.max(serviceMin, val));
-    document.getElementById('qtyInput').value = qty;
-    renderSummary();
+  function voltarStep1(){
+    document.getElementById('step2').style.display='none';
+    document.getElementById('step1').style.display='flex';
+    window.scrollTo(0,0);
   }
 
-  function selectPay(method) {
-    payMethod = method;
-    document.getElementById('opt-pix').classList.toggle('selected', method === 'pix');
-    document.getElementById('opt-card').classList.toggle('selected', method === 'card');
-    renderMain();
-    renderSummary();
+  function changeQty(d){ setQty(qty+d); }
+  function setQty(v){
+    if(isNaN(v)) return;
+    qty = Math.min(serviceMax, Math.max(serviceMin, v));
+    renderStep1();
   }
 
-  function toggleReq(el) {
-    const body = document.getElementById('req-body');
-    body.classList.toggle('open');
-    document.getElementById('req-arrow').textContent = body.classList.contains('open') ? '▲' : '▼';
+  function toggleReq(){
+    const b = document.getElementById('req-body');
+    const a = document.getElementById('req-arrow');
+    b.style.display = b.style.display==='none' ? 'block' : 'none';
+    a.textContent   = b.style.display==='none' ? '▼' : '▲';
   }
 
-  function finalizar() {
-    const link = document.getElementById('profileLink')?.value.trim();
+  function selectPay(m){
+    payMethod = m;
+    document.getElementById('opt-pix').classList.toggle('selected', m==='pix');
+    document.getElementById('opt-card').classList.toggle('selected', m==='card');
+    document.getElementById('pay-note').textContent = m==='pix'
+      ? 'Compra única via PIX, sem assinatura recorrente. O valor total do pedido é exibido no resumo antes do pagamento.'
+      : 'Pagamento via cartão de crédito. Processado com segurança.';
+    renderStep2Summary();
+  }
+
+  function finalizar(){
+    const link  = document.getElementById('profileLink')?.value.trim();
     const email = document.getElementById('emailInput')?.value.trim();
     const terms = document.getElementById('termsCheck')?.checked;
-
-    if (!link) { alert('Informe o link do seu perfil do Instagram!'); return; }
-    if (!email) { alert('Informe seu e-mail!'); return; }
-    if (!terms) { alert('Aceite os Termos de Uso para continuar.'); return; }
-
+    if(!link)  { alert('Informe o link do seu perfil do Instagram!'); return; }
+    if(!email) { alert('Informe seu e-mail!'); return; }
+    if(!terms) { alert('Aceite os Termos de Uso para continuar.'); return; }
     alert('Em breve: integração com Mercado Pago para gerar o QR Code Pix! 🚀');
   }
 
-  // ─── Init ─────────────────────────────────────────
-  renderMain();
-  renderSummary();
-  carregarUpsell();
+  renderStep1();
 </script>
-
 </body>
 </html>
