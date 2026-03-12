@@ -34,8 +34,8 @@
   nav {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 16px;
+    justify-content: center;
+    gap: 24px;
     padding: 0 40px;
     height: 64px;
     background: rgba(10,10,15,0.95);
@@ -46,7 +46,6 @@
     left: 0;
     right: 0;
     z-index: 100;
-    overflow: hidden;
   }
 
   .nav-left {
@@ -54,7 +53,6 @@
     align-items: center;
     gap: 12px;
     flex-shrink: 0;
-    min-width: 0;
   }
 
   .nav-logo {
@@ -105,9 +103,8 @@
   .nav-links {
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 28px;
-    flex: 1;
+    gap: 24px;
+    white-space: nowrap;
   }
 
   .nav-links a {
@@ -123,7 +120,6 @@
 
   .nav-right {
     display: flex;
-    justify-content: flex-end;
     flex-shrink: 0;
   }
 
@@ -202,14 +198,26 @@
   /* Offset body so content isn't hidden behind fixed nav */
   body { padding-top: 64px; }
 
-  @media (max-width: 900px) {
-    nav { gap: 12px; padding: 12px 20px; }
+  
+  /* Prevent links from overlapping other nav items */
+  .nav-links a {
+    white-space: nowrap;
+  }
+
+  @media (max-width: 860px) {
+    .nav-links { gap: 10px; }
+    .nav-links a { font-size: 11px; }
     .nav-counter { display: none; }
-    .nav-links { gap: 16px; }
+  }
+
+  @media (max-width: 900px) {
+    nav { gap: 12px; padding: 0 20px; }
+    .nav-counter { display: none; }
+    .nav-links { gap: 14px; }
     .nav-links a { font-size: 12px; }
   }
 
-  @media (max-width: 640px) {
+  @media (max-width: 700px) {
     .nav-links { display: none; }
     .nav-right { display: none; }
     .nav-hamburger { display: flex; }
