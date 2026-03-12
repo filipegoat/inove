@@ -506,7 +506,12 @@
     }
   }
 
-  document.getElementById('qtyInput').addEventListener('input', atualizaResumo);
+  document.getElementById('qtyInput').addEventListener('input', () => {
+    const input = document.getElementById('qtyInput');
+    // Remove caracteres não numéricos
+    input.value = input.value.replace(/[^0-9]/g, '');
+    atualizaResumo();
+  });
 
   function changeQty(delta) {
     const input = document.getElementById('qtyInput');
@@ -533,10 +538,13 @@
   }
 
   function irParaStep2() {
-    const qty = parseInt(document.getElementById('qtyInput').value);
-    if (qty < serviceMin || qty > serviceMax) {
-      alert(`Quantidade deve ser entre ${serviceMin} e ${serviceMax}.`); return;
-    }
+    let qty = parseInt(document.getElementById('qtyInput').value) || serviceMin;
+    // Força clamp antes de qualquer coisa
+    if (qty < serviceMin) qty = serviceMin;
+    if (qty > serviceMax) qty = serviceMax;
+    document.getElementById('qtyInput').value = qty;
+    atualizaResumo();
+    if (isNaN(qty)) { alert(`Insira uma quantidade válida.`); return; }
     document.getElementById('step1').style.display = 'none';
     document.getElementById('step2').style.display = 'block';
     carregarUpsell();
