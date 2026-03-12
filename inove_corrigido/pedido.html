@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fazer Pedido</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --purple: #8B2FC9;
+      --purple-light: #A855F7;
+      --pink: #E040FB;
+      --bg: #0f0f18;
+      --card: #1a1a2e;
+      --card2: #16213e;
+      --border: #2a2a45;
+      --text: #f0f0ff;
+      --muted: #8888aa;
+      --green: #22c55e;
+      --pix: #32BCAD;
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { background:#f5f3ff; font-family:'DM Sans',sans-serif; min-height:100vh; }
+
+    /* ── STEP 1 ── */
+    #step1 {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      background: #f0eef8;
+    }
+
+    .step1-wrap {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 24px;
+      width: 100%;
+      max-width: 900px;
+    }
+
+    /* Card esquerdo */
+    .s1-card {
+      background: var(--card);
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .s1-top {
+      padding: 36px 36px 24px;
+      text-align: center;
+      background: linear-gradient(160deg, #1a1a2e, #2a1040);
+    }
+
+    .ig-icon-lg {
+      width: 56px; height: 56px; border-radius: 14px;
+      background: linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 16px;
+    }
+
+    .s1-top h2 {
+      font-size: 22px; font-weight: 700; color: #fff; margin-bottom: 12px;
+    }
+
+    .discount-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(168,85,247,.2); border: 1px solid rgba(168,85,247,.4);
+      color: var(--purple-light); font-size: 13px; font-weight: 600;
+      padding: 6px 16px; border-radius: 30px;
+    }
+
+    /* Seletor de quantidade */
+    .qty-wrap { padding: 32px 36px; }
+
+    .qty-row {
+      display: flex; align-items: center; gap: 0;
+      background: #0f0f18; border-radius: 14px;
+      border: 2px solid var(--border); overflow: hidden;
+    }
+
+    .qty-btn {
+      width: 72px; height: 72px; border: none; cursor: pointer;
+      font-size: 28px; font-weight: 700; color: #fff;
+      background: linear-gradient(135deg, var(--purple), var(--purple-light));
+      transition: opacity .2s; flex-shrink: 0;
+    }
+    .qty-btn:hover { opacity: .8; }
+
+    .qty-input {
+      flex: 1; text-align: center;
+      font-size: 32px; font-weight: 800;
+      color: #fff; background: transparent; border: none; outline: none;
+      font-family: 'Orbitron', sans-serif;
+    }
+
+    .qty-limits {
+      text-align: center; font-size: 13px; color: var(--muted); margin-top: 10px;
+    }
+
+    /* Requisitos */
+    .req-wrap { margin: 0 36px 24px; border-radius: 12px; overflow: hidden; background: #0f0f18; border: 1px solid var(--border); }
+    .req-toggle {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 18px; cursor: pointer; color: var(--purple-light);
+      font-size: 14px; font-weight: 600;
+    }
+    .req-toggle span { display:flex; align-items:center; gap:8px; }
+    .req-body { padding: 0 18px 14px; }
+    .req-body li { font-size: 13px; color: var(--muted); margin-bottom: 6px; list-style:none; padding-left:14px; position:relative; }
+    .req-body li::before { content:'•'; position:absolute; left:0; color:var(--purple-light); }
+    .req-body li b { color:#fff; }
+
+    /* Botão adicionar */
+    .btn-add {
+      display: block; width: calc(100% - 72px); margin: 0 36px 36px;
+      background: linear-gradient(135deg, var(--purple), var(--pink));
+      color: #fff; border: none; border-radius: 14px;
+      padding: 18px; font-size: 17px; font-weight: 700;
+      cursor: pointer; font-family: 'DM Sans', sans-serif;
+      transition: opacity .2s, transform .15s;
+      letter-spacing: .3px;
+    }
+    .btn-add:hover { opacity: .9; transform: translateY(-2px); }
+
+    /* Card resumo */
+    .s1-summary {
+      background: var(--card);
+      border-radius: 20px; overflow: hidden;
+      position: sticky; top: 20px;
+    }
+
+    .sum-header {
+      background: linear-gradient(135deg, var(--purple), var(--pink));
+      padding: 18px 24px; display: flex; align-items: center; justify-content: space-between;
+    }
+    .sum-header h3 { font-size: 16px; font-weight: 700; color: #fff; }
+    .sum-secure { display:flex; align-items:center; gap:5px; font-size:12px; color:rgba(255,255,255,.8); }
+
+    .sum-item { padding: 20px 24px; display:flex; align-items:center; gap:14px; border-bottom:1px solid var(--border); }
+    .sum-ig { width:42px; height:42px; border-radius:10px; flex-shrink:0; background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); display:flex; align-items:center; justify-content:center; }
+    .sum-item-info { flex:1; min-width:0; }
+    .sum-item-name { font-size:14px; font-weight:600; color:#fff; }
+    .sum-item-plat { font-size:12px; color:var(--muted); margin-top:2px; }
+    .sum-item-price { font-size:16px; font-weight:700; color:#fff; font-family:'Orbitron',sans-serif; }
+
+    .sum-totals { padding: 18px 24px; }
+    .sum-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; font-size:14px; color:var(--muted); }
+    .sum-row.total { color:#fff; font-size:18px; font-weight:800; margin-top:14px; padding-top:14px; border-top:1px solid var(--border); font-family:'Orbitron',sans-serif; }
+    .sum-row.discount { color:var(--green); }
+    .pix-tag { background:var(--pix); color:#fff; font-size:10px; font-weight:700; padding:2px 7px; border-radius:4px; }
+
+    /* ── STEP 2 ── */
+    #step2 { display: none; min-height: 100vh; background: #f0eef8; padding: 40px 20px; }
+
+    .step2-wrap {
+      display: grid;
+      grid-template-columns: 1fr 360px;
+      gap: 24px;
+      max-width: 1000px;
+      margin: 0 auto;
+      align-items: start;
+    }
+
+    .s2-card {
+      background: var(--card);
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .s2-card-header {
+      padding: 24px 32px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 14px;
+    }
+    .s2-card-header h2 { font-size: 18px; font-weight: 700; color: #fff; }
+
+    .back-btn {
+      background: none; border: 1px solid var(--border);
+      color: var(--purple-light); padding: 8px 14px; border-radius: 8px;
+      font-size: 13px; font-weight: 600; cursor: pointer;
+      font-family: 'DM Sans', sans-serif; transition: border-color .2s;
+    }
+    .back-btn:hover { border-color: var(--purple-light); }
+
+    /* Item do pedido no step2 */
+    .order-item {
+      padding: 20px 32px; display:flex; align-items:center; gap:14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .order-item-info { flex:1; }
+    .order-item-name { font-size:14px; font-weight:600; color:#fff; }
+    .order-item-qty { font-size:12px; color:var(--muted); margin-top:3px; }
+    .remove-btn { color:#f87171; font-size:13px; cursor:pointer; background:none; border:none; font-family:'DM Sans',sans-serif; }
+
+    /* Link perfil */
+    .s2-section { padding: 24px 32px; border-bottom: 1px solid var(--border); }
+    .s2-section label { font-size:13px; color:var(--muted); display:block; margin-bottom:10px; font-weight:500; }
+    .s2-input-wrap { position:relative; }
+    .s2-input-wrap svg { position:absolute; left:14px; top:50%; transform:translateY(-50%); }
+    .s2-input {
+      width:100%; background:#0f0f18; border:1px solid var(--border);
+      color:#fff; padding:13px 14px 13px 40px; border-radius:10px;
+      font-size:14px; font-family:'DM Sans',sans-serif; outline:none; transition:border-color .2s;
+    }
+    .s2-input:focus { border-color:var(--purple-light); }
+    .s2-input::placeholder { color:#444; }
+    .s2-hints { margin-top:10px; }
+    .s2-hints li { font-size:12px; color:var(--muted); list-style:none; padding-left:14px; position:relative; margin-bottom:4px; }
+    .s2-hints li::before { content:'•'; position:absolute; left:0; color:var(--purple-light); }
+    .s2-hints li b { color:#fff; }
+
+    /* Upsell */
+    .upsell-wrap {
+      margin: 24px 32px;
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+      /* borda pontilhada via outline + box-shadow */
+      border: 2px dashed rgba(168,85,247,0.6);
+      background:
+        linear-gradient(135deg, rgba(80,0,120,0.55) 0%, rgba(40,0,80,0.85) 100%);
+      box-shadow: 0 0 32px rgba(139,47,201,0.35), inset 0 0 40px rgba(80,0,120,0.2);
+    }
+    /* grade de pontinhos no fundo */
+    .upsell-wrap::before {
+      content:'';
+      position:absolute; inset:0; z-index:0; pointer-events:none;
+      background-image: radial-gradient(circle, rgba(168,85,247,0.18) 1px, transparent 1px);
+      background-size: 18px 18px;
+    }
+    .upsell-hdr {
+      position: relative; z-index:1;
+      background: linear-gradient(135deg, rgba(100,0,160,0.7), rgba(60,0,100,0.9));
+      padding:16px 20px; display:flex; align-items:center; gap:10px;
+      border-bottom: 1px solid rgba(168,85,247,0.25);
+    }
+    .upsell-hdr h3 { font-size:15px; font-weight:700; color:#fff; }
+    .upsell-hdr p { font-size:12px; color:rgba(200,160,255,0.8); }
+
+    .upsell-item {
+      position: relative; z-index:1;
+      padding:16px 20px; border-bottom:1px solid rgba(168,85,247,0.15);
+      display:flex; align-items:center; gap:12px;
+      background: rgba(20,0,40,0.45);
+      transition: background .15s;
+    }
+    .upsell-item:hover { background: rgba(80,0,120,0.35); }
+    .upsell-item:last-child { border-bottom:none; }
+    .upsell-ig { width:44px; height:44px; border-radius:10px; flex-shrink:0; background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); display:flex; align-items:center; justify-content:center; }
+    .upsell-info { flex:1; min-width:0; }
+    .upsell-badge { font-size:10px; font-weight:700; padding:2px 8px; border-radius:20px; display:inline-block; margin-bottom:4px; }
+    .badge-up { background:rgba(168,85,247,.2); color:var(--purple-light); border:1px solid rgba(168,85,247,.3); }
+    .badge-hot { background:rgba(239,68,68,.2); color:#f87171; border:1px solid rgba(239,68,68,.3); }
+    .badge-eco { background:rgba(34,197,94,.2); color:#4ade80; border:1px solid rgba(34,197,94,.3); }
+    .upsell-name { font-size:13px; font-weight:600; color:#fff; }
+    .upsell-qty-label { font-size:11px; color:var(--muted); }
+    .upsell-prices { text-align:right; margin-right:10px; flex-shrink:0; }
+    .upsell-old { font-size:11px; color:var(--muted); text-decoration:line-through; }
+    .upsell-new { font-size:16px; font-weight:800; color:var(--green); font-family:'Orbitron',sans-serif; }
+    .upsell-add {
+      background:linear-gradient(135deg,var(--purple),var(--purple-light));
+      color:#fff; border:none; border-radius:8px; padding:9px 14px;
+      font-size:12px; font-weight:700; cursor:pointer; white-space:nowrap;
+      font-family:'DM Sans',sans-serif; transition:opacity .2s;
+    }
+    .upsell-add:hover { opacity:.8; }
+    .upsell-add.added { background:var(--green); }
+
+    /* Contato */
+    .contact-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+
+    /* Pagamento */
+    .pay-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .pay-opt {
+      border:2px solid var(--border); border-radius:12px;
+      padding:14px 16px; cursor:pointer; display:flex; align-items:center; gap:10px;
+      transition:border-color .2s, background .2s; background:#0f0f18;
+    }
+    .pay-opt.selected { border-color:var(--pix); background:rgba(50,188,173,.08); }
+    .pay-opt-label { font-size:14px; font-weight:600; color:#fff; }
+    .pay-opt-sub { font-size:11px; color:var(--muted); }
+    .pix-chip { background:var(--pix); color:#fff; font-size:10px; font-weight:700; padding:3px 7px; border-radius:4px; }
+    .pay-note { margin-top:12px; font-size:12px; color:var(--muted); line-height:1.5; }
+
+    /* Termos */
+    .terms-label { display:flex; align-items:center; gap:10px; cursor:pointer; }
+    .terms-label input { width:17px; height:17px; accent-color:var(--purple-light); cursor:pointer; }
+    .terms-label span { font-size:13px; color:var(--muted); }
+    .terms-label a { color:var(--purple-light); text-decoration:none; }
+
+    /* Botão gerar pix */
+    .btn-pix {
+      display:flex; align-items:center; justify-content:center; gap:10px;
+      width:100%; background:linear-gradient(135deg,var(--purple),var(--pink));
+      color:#fff; border:none; border-radius:14px;
+      padding:20px; font-size:17px; font-weight:700;
+      cursor:pointer; font-family:'DM Sans',sans-serif;
+      transition:opacity .2s, transform .15s; margin-top:4px;
+    }
+    .btn-pix:hover { opacity:.9; transform:translateY(-2px); }
+
+    /* Resumo step2 */
+    .s2-summary {
+      background:var(--card); border-radius:20px; overflow:hidden;
+      position:sticky; top:20px;
+    }
+    .s2-sum-hdr {
+      padding:16px 22px; display:flex; align-items:center; justify-content:space-between;
+      border-bottom:1px solid var(--border);
+    }
+    .s2-sum-hdr h3 { font-size:15px; font-weight:700; color:#fff; }
+    .s2-sum-count { font-size:12px; color:var(--muted); }
+    .s2-sum-item { padding:16px 22px; display:flex; align-items:center; gap:12px; border-bottom:1px solid var(--border); }
+    .s2-sum-ig { width:38px; height:38px; border-radius:9px; flex-shrink:0; background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); display:flex; align-items:center; justify-content:center; }
+    .s2-sum-info { flex:1; min-width:0; }
+    .s2-sum-name { font-size:13px; font-weight:600; color:#fff; }
+    .s2-sum-plat { font-size:11px; color:var(--muted); }
+    .s2-sum-price { font-size:14px; font-weight:700; color:#fff; }
+    .s2-totals { padding:18px 22px; }
+    .s2-row { display:flex; justify-content:space-between; font-size:13px; color:var(--muted); margin-bottom:10px; }
+    .s2-row.total { color:#fff; font-size:17px; font-weight:800; padding-top:14px; margin-top:4px; border-top:1px solid var(--border); font-family:'Orbitron',sans-serif; }
+    .s2-row.disc { color:var(--green); }
+
+    /* Spinner */
+    .loading { display:flex; flex-direction:column; align-items:center; padding:40px; gap:12px; color:var(--muted); }
+    .spinner { width:32px; height:32px; border:3px solid var(--border); border-top-color:var(--purple-light); border-radius:50%; animation:spin .8s linear infinite; }
+    @keyframes spin { to{transform:rotate(360deg)} }
+
+    /* Mobile */
+    @media(max-width:720px){
+      .step1-wrap, .step2-wrap { grid-template-columns:1fr; }
+      .s1-summary, .s2-summary { position:static; }
+      .s1-top { padding:28px 24px 20px; }
+      .qty-wrap { padding:24px; }
+      .req-wrap { margin:0 24px 20px; }
+      .btn-add { width:calc(100% - 48px); margin:0 24px 28px; }
+      .s2-section { padding:18px 22px; }
+      .upsell-wrap { margin:0 22px 20px; }
+      .contact-grid { grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ════════════ STEP 1 ════════════ -->
+<div id="step1">
+  <div class="step1-wrap">
+
+    <!-- Esquerda -->
+    <div class="s1-card">
+      <div class="s1-top">
+        <div class="ig-icon-lg">
+          <svg viewBox="0 0 24 24" fill="white" width="28" height="28"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+        </div>
+        <h2 id="s1-title">Precisa de quantos?</h2>
+        <div class="discount-badge">💸 Mais quantidade = maior desconto</div>
+      </div>
+
+      <div class="qty-wrap">
+        <div class="qty-row">
+          <button class="qty-btn" onclick="changeQty(-100)">−</button>
+          <input class="qty-input" type="number" id="qtyInput" value="350" oninput="setQty(parseInt(this.value))">
+          <button class="qty-btn" onclick="changeQty(+100)">+</button>
+        </div>
+        <div class="qty-limits" id="qtyLimits"></div>
+      </div>
+
+      <div class="req-wrap">
+        <div class="req-toggle" onclick="toggleReq()">
+          <span>📋 Requisitos para receber o serviço</span>
+          <span id="req-arrow">▲</span>
+        </div>
+        <ul class="req-body" id="req-body">
+          <li>Perfil precisa estar <b>público</b>. Se estiver privado, os serviços não chegam.</li>
+          <li>Reposição, quando disponível, segue as regras do serviço contratado e análise do suporte.</li>
+        </ul>
+      </div>
+
+      <button class="btn-add" onclick="irParaStep2()">Adicionar ao carrinho →</button>
+    </div>
+
+    <!-- Resumo direita -->
+    <div class="s1-summary">
+      <div class="sum-header">
+        <h3>Seu Pedido</h3>
+        <span class="sum-secure">🔒 Compra segura</span>
+      </div>
+      <div class="sum-item">
+        <div class="sum-ig">
+          <svg viewBox="0 0 24 24" fill="white" width="20" height="20"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+        </div>
+        <div class="sum-item-info">
+          <div class="sum-item-name" id="sum-name">—</div>
+          <div class="sum-item-plat" id="sum-plat">—</div>
+        </div>
+        <div class="sum-item-price" id="sum-price">—</div>
+      </div>
+      <div class="sum-totals">
+        <div class="sum-row"><span>Subtotal</span><span id="sum-sub">—</span></div>
+        <div class="sum-row discount"><span><span class="pix-tag">PIX</span> 5% de desconto</span><span id="sum-disc">—</span></div>
+        <div class="sum-row total"><span>Total</span><span id="sum-total">—</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ════════════ STEP 2 ════════════ -->
+<div id="step2">
+  <div class="step2-wrap">
+
+    <!-- Esquerda -->
+    <div>
+      <div class="s2-card">
+        <div class="s2-card-header">
+          <button class="back-btn" onclick="voltarStep1()">← Voltar</button>
+          <h2>Confirme e finalize seu pedido</h2>
+        </div>
+
+        <!-- Item principal -->
+        <div class="order-item">
+          <div class="sum-ig">
+            <svg viewBox="0 0 24 24" fill="white" width="20" height="20"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          </div>
+          <div class="order-item-info">
+            <div class="order-item-name" id="s2-item-name">—</div>
+            <div class="order-item-qty" id="s2-item-qty">—</div>
+          </div>
+          <button class="remove-btn" onclick="voltarStep1()">Remover</button>
+        </div>
+
+        <!-- Link perfil -->
+        <div class="s2-section">
+          <label id="profileLinkLabel">Link do perfil</label>
+          <div class="s2-input-wrap">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+            <input class="s2-input" type="url" id="profileLink" placeholder="https://...">
+          </div>
+          <ul class="s2-hints">
+            <li>Preencha o link corretamente para cada item</li>
+            <li>Seu perfil precisa estar <b>público</b></li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Contato + Pagamento + Upsell (mesmo card) -->
+      <div class="s2-card" style="margin-top:16px;">
+        <!-- Upsell dentro do card -->
+        <div id="upsell-wrap" style="display:none;">
+          <div class="upsell-hdr">
+            <span style="font-size:22px">🔥</span>
+            <div>
+              <h3>Complete seu pedido</h3>
+              <p>Clientes que compraram isso também levaram:</p>
+            </div>
+          </div>
+          <div id="upsell-items"></div>
+        </div>
+        <div class="s2-section">
+          <div class="contact-grid">
+            <div>
+              <label>E-mail</label>
+              <div class="s2-input-wrap">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
+                <input class="s2-input" type="email" id="emailInput" placeholder="seuemail@gmail.com">
+              </div>
+            </div>
+            <div>
+              <label>WhatsApp</label>
+              <div class="s2-input-wrap">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.07 1.18 2 2 0 012.03 0h3a2 2 0 012 1.72c.13 1 .37 1.98.72 2.92a2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.16-1.16a2 2 0 012.11-.45c.94.35 1.92.59 2.92.72A2 2 0 0122 16.92z"/></svg>
+                <input class="s2-input" type="tel" id="whatsInput" placeholder="(00) 00000-0000" style="padding-left:40px">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="s2-section">
+          <label>Método de pagamento</label>
+          <div class="pay-grid">
+            <div class="pay-opt selected" id="opt-pix" onclick="selectPay('pix')">
+              <span class="pix-chip">PIX</span>
+              <div>
+                <div class="pay-opt-label">Pix</div>
+                <div class="pay-opt-sub">5% de desconto</div>
+              </div>
+            </div>
+            <div class="pay-opt" id="opt-card" onclick="selectPay('card')">
+              <span style="font-size:22px">💳</span>
+              <div>
+                <div class="pay-opt-label">Cartão de Crédito</div>
+                <div class="pay-opt-sub">Sem desconto</div>
+              </div>
+            </div>
+          </div>
+          <p class="pay-note" id="pay-note">Compra única via PIX, sem assinatura recorrente. O valor total do pedido é exibido no resumo antes do pagamento.</p>
+        </div>
+
+        <div class="s2-section" style="border-bottom:none;">
+          <label class="terms-label">
+            <input type="checkbox" id="termsCheck">
+            <span>Aceito os <a href="#">Termos de Uso</a> e <a href="#">Política de Reembolso</a></span>
+          </label>
+        </div>
+
+        <div style="padding:0 32px 32px;">
+          <button class="btn-pix" onclick="finalizar()">
+            🔒 <span id="btn-pix-label">Gerar Pix QR Code</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resumo step2 -->
+    <div class="s2-summary">
+      <div class="s2-sum-hdr">
+        <h3>Seu Pedido</h3>
+        <span class="s2-sum-count" id="s2-count">1 item</span>
+      </div>
+      <div id="s2-sum-body"></div>
+      <div class="s2-totals">
+        <div class="s2-row"><span>Subtotal</span><span id="s2-sub">—</span></div>
+        <div class="s2-row disc" id="s2-disc-row"><span><span class="pix-tag">PIX</span> 5% Desconto PIX</span><span id="s2-disc">—</span></div>
+        <div class="s2-row total"><span>Total</span><span id="s2-total">—</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const params      = new URLSearchParams(location.search);
+  const serviceId   = params.get('id')   || '';
+  const serviceName = params.get('name') || 'Serviço';
+  const serviceRate = parseFloat(params.get('rate')) || 0.50;
+  const serviceMin  = parseInt(params.get('min'))    || 10;
+  const serviceMax  = parseInt(params.get('max'))    || 100000;
+  const platform    = (params.get('platform') || 'instagram').toLowerCase();
+
+  // Config por plataforma
+  const PLATFORM_CONFIG = {
+    instagram: {
+      label: 'Instagram',
+      placeholder: 'https://instagram.com/seuperfil',
+      linkLabel: 'Link do perfil do Instagram',
+      filterKeyword: 'instagram',
+      icon: `<svg viewBox="0 0 24 24" fill="white" width="20" height="20"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>`,
+      iconBg: 'linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)'
+    },
+    spotify: {
+      label: 'Spotify',
+      placeholder: 'https://open.spotify.com/artist/...',
+      linkLabel: 'Link do artista/música no Spotify',
+      filterKeyword: 'spotify',
+      icon: `<svg viewBox="0 0 24 24" fill="white" width="20" height="20"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>`,
+      iconBg: '#1DB954'
+    },
+    tiktok: {
+      label: 'TikTok',
+      placeholder: 'https://tiktok.com/@seuperfil',
+      linkLabel: 'Link do perfil no TikTok',
+      filterKeyword: 'tiktok',
+      icon: `<svg viewBox="0 0 24 24" fill="white" width="20" height="20"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.78 1.52V6.75a4.85 4.85 0 01-1.01-.06z"/></svg>`,
+      iconBg: '#000000'
+    },
+    youtube: {
+      label: 'YouTube',
+      placeholder: 'https://youtube.com/watch?v=...',
+      linkLabel: 'Link do vídeo/canal no YouTube',
+      filterKeyword: 'youtube',
+      icon: `<svg viewBox="0 0 24 24" fill="white" width="20" height="20"><path d="M23.495 6.205a3.007 3.007 0 00-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 00.527 6.205a31.247 31.247 0 00-.522 5.805 31.247 31.247 0 00.522 5.783 3.007 3.007 0 002.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 002.088-2.088 31.247 31.247 0 00.5-5.783 31.247 31.247 0 00-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>`,
+      iconBg: '#FF0000'
+    },
+    x: {
+      label: 'X (Twitter)',
+      placeholder: 'https://x.com/seuperfil',
+      linkLabel: 'Link do perfil no X',
+      filterKeyword: 'twitter',
+      icon: `<svg viewBox="0 0 24 24" fill="white" width="20" height="20"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.843L1.254 2.25H8.08l4.262 5.636L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>`,
+      iconBg: '#000000'
+    },
+    facebook: {
+      label: 'Facebook',
+      placeholder: 'https://facebook.com/seuperfil',
+      linkLabel: 'Link do perfil no Facebook',
+      filterKeyword: 'facebook',
+      icon: `<svg viewBox="0 0 24 24" fill="white" width="20" height="20"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>`,
+      iconBg: '#1877F2'
+    },
+    telegram: {
+      label: 'Telegram',
+      placeholder: 'https://t.me/seucanal',
+      linkLabel: 'Link do canal/grupo no Telegram',
+      filterKeyword: 'telegram',
+      icon: `<svg viewBox="0 0 24 24" fill="white" width="20" height="20"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>`,
+      iconBg: '#26A5E4'
+    },
+    whatsapp: {
+      label: 'WhatsApp',
+      placeholder: 'https://wa.me/5511999999999',
+      linkLabel: 'Link do WhatsApp/grupo',
+      filterKeyword: 'whatsapp',
+      icon: `<svg viewBox="0 0 24 24" fill="white" width="20" height="20"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>`,
+      iconBg: '#25D366'
+    },
+    threads: {
+      label: 'Threads',
+      placeholder: 'https://threads.net/@seuperfil',
+      linkLabel: 'Link do perfil no Threads',
+      filterKeyword: 'threads',
+      icon: `<svg viewBox="0 0 24 24" fill="white" width="20" height="20"><path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.472 12.01v-.017c.03-3.579.879-6.43 2.525-8.482C5.851 1.205 8.604.024 12.185 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-1.104-3.96-3.898-5.984-8.304-6.015-2.91.022-5.11.936-6.54 2.717C4.307 6.504 3.616 8.914 3.589 12c.027 3.086.718 5.496 2.057 7.164 1.43 1.783 3.631 2.698 6.54 2.717 2.623-.02 4.358-.631 5.8-2.045 1.568-1.537 1.608-3.369 1.09-4.798-.274-.737-.704-1.329-1.24-1.75-.164 1.35-.568 2.446-1.213 3.272-.878 1.135-2.162 1.724-3.813 1.813-1.202.065-2.34-.228-3.184-.801-1.036-.687-1.64-1.74-1.703-2.964-.063-1.19.4-2.285 1.295-3.082.857-.76 2.066-1.207 3.49-1.291.48-.028.96-.028 1.43-.007-.02-.31-.057-.596-.114-.853-.198-.913-.67-1.465-1.396-1.618a2.3 2.3 0 00-.468-.048c-.59 0-1.066.27-1.464.823l-1.653-1.219C9.56 5.597 10.72 5 12.074 5c.319 0 .642.034.968.1 1.85.368 2.93 1.69 3.044 3.72.01.17.015.345.013.524.57.295 1.074.674 1.496 1.128 1.019 1.085 1.587 2.554 1.567 4.028-.033 2.497-1.529 4.936-4.067 6.317C13.917 23.726 13.077 24 12.186 24z"/></svg>`,
+      iconBg: '#000000'
+    }
+  };
+
+  const cfg = PLATFORM_CONFIG[platform] || PLATFORM_CONFIG['instagram'];
+
+  let qty       = Math.max(serviceMin, 350);
+  let payMethod = 'pix';
+  let upsellAdded = {};
+  let upsellServicos = [];
+
+  const PIX_DISC   = 0.05;
+  const FAKE_DISC  = 0.30;
+  const BADGES     = [
+    { label:'⬆️ Upgrade 1', cls:'badge-up' },
+    { label:'🔥 Mais Popular', cls:'badge-hot' },
+    { label:'💰 9% de economia', cls:'badge-eco' },
+  ];
+
+  function fmt(v){ return v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'}); }
+  function calcPreco(rate,q){ return (rate/1000)*q; }
+
+  // ── Step 1 render ──
+  function renderStep1(){
+    const preco   = calcPreco(serviceRate, qty);
+    const disc    = preco * PIX_DISC;
+    const total   = preco - disc;
+    const label   = qty.toLocaleString('pt-BR') + ' ' + serviceName;
+
+    document.getElementById('s1-title').textContent  = 'Precisa de quantos ' + serviceName.split(' ')[0].toLowerCase() + '?';
+    document.getElementById('qtyInput').value        = qty;
+    document.getElementById('qtyLimits').textContent = `Mínimo: ${serviceMin.toLocaleString('pt-BR')} — Máximo: ${serviceMax.toLocaleString('pt-BR')}`;
+    document.getElementById('sum-name').textContent  = label;
+    document.getElementById('sum-price').textContent = fmt(preco);
+    document.getElementById('sum-sub').textContent   = fmt(preco);
+    document.getElementById('sum-disc').textContent  = '−' + fmt(disc);
+    document.getElementById('sum-total').textContent = fmt(total);
+  }
+
+  // ── Step 2 render ──
+  function renderStep2Summary(){
+    const preco  = calcPreco(serviceRate, qty);
+    const disc   = payMethod === 'pix' ? preco * PIX_DISC : 0;
+
+    let extras = 0;
+    let extraHTML = '';
+    for(const [id,s] of Object.entries(upsellAdded)){
+      const p = calcPreco(s.rate, s.qty);
+      extras += p;
+      extraHTML += `
+        <div class="s2-sum-item">
+          <div class="s2-sum-ig"><svg viewBox="0 0 24 24" fill="white" width="18" height="18"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></div>
+          <div class="s2-sum-info"><div class="s2-sum-name">${s.name}</div><div class="s2-sum-plat">${cfg.label}</div></div>
+          <div class="s2-sum-price">${fmt(p)}</div>
+        </div>`;
+    }
+
+    const sub   = preco + extras;
+    const grand = sub - disc;
+    const items = 1 + Object.keys(upsellAdded).length;
+
+    document.getElementById('s2-item-name').textContent = serviceName;
+    document.getElementById('s2-item-qty').textContent  = qty.toLocaleString('pt-BR') + ' unidades';
+    document.getElementById('s2-count').textContent     = items + (items===1?' item':' itens');
+
+    document.getElementById('s2-sum-body').innerHTML = `
+      <div class="s2-sum-item">
+        <div class="s2-sum-ig" style="background:${cfg.iconBg}">${cfg.icon}</div>
+        <div class="s2-sum-info"><div class="s2-sum-name">${qty.toLocaleString('pt-BR')} ${serviceName}</div><div class="s2-sum-plat">${cfg.label}</div></div>
+        <div class="s2-sum-price">${fmt(preco)}</div>
+      </div>${extraHTML}`;
+
+    document.getElementById('s2-sub').textContent   = fmt(sub);
+    document.getElementById('s2-disc').textContent  = disc > 0 ? '−'+fmt(disc) : '—';
+    document.getElementById('s2-disc-row').style.display = payMethod==='pix' ? 'flex' : 'none';
+    document.getElementById('s2-total').textContent = fmt(grand);
+    document.getElementById('btn-pix-label').textContent = payMethod==='pix' ? 'Gerar Pix QR Code' : 'Finalizar Pedido';
+  }
+
+  // ── Upsell ──
+  async function carregarUpsell(){
+    try{
+      const res  = await fetch('/api/services');
+      const data = await res.json();
+      if(!Array.isArray(data)) return;
+      const outros = data.filter(s => s.name && s.name.toLowerCase().includes(cfg.filterKeyword) && String(s.service) !== serviceId);
+      upsellServicos = outros.sort(()=>Math.random()-.5).slice(0,3);
+      renderUpsell();
+    }catch{}
+  }
+
+  function renderUpsell(){
+    if(!upsellServicos.length) return;
+    document.getElementById('upsell-wrap').style.display='block';
+    document.getElementById('upsell-items').innerHTML = upsellServicos.map((s,i)=>{
+      const qU      = Math.max(parseInt(s.min)||100, 100);
+      const precoR  = calcPreco(parseFloat(s.rate), qU);
+      const precoF  = precoR / (1-FAKE_DISC);
+      const badge   = BADGES[i]||BADGES[0];
+      const isAdded = !!upsellAdded[s.service];
+      return `
+        <div class="upsell-item">
+          <div class="upsell-ig"><svg viewBox="0 0 24 24" fill="white" width="20" height="20"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></div>
+          <div class="upsell-info">
+            <span class="upsell-badge ${badge.cls}">${badge.label}</span>
+            <div class="upsell-name">${s.name}</div>
+            <div class="upsell-qty-label">${qU.toLocaleString('pt-BR')} unidades</div>
+          </div>
+          <div class="upsell-prices">
+            <div class="upsell-old">${fmt(precoF)}</div>
+            <div class="upsell-new">${fmt(precoR)}</div>
+          </div>
+          <button class="upsell-add ${isAdded?'added':''}" id="ubtn-${s.service}"
+            onclick="toggleUpsell('${s.service}','${s.name.replace(/'/g,"\\'")}',${parseFloat(s.rate)},${qU})">
+            ${isAdded?'✓ Adicionado':'+ Adicionar'}
+          </button>
+        </div>`;
+    }).join('');
+  }
+
+  function toggleUpsell(id,name,rate,qU){
+    if(upsellAdded[id]) delete upsellAdded[id];
+    else upsellAdded[id]={name,rate,qty:qU};
+    renderUpsell();
+    renderStep2Summary();
+  }
+
+  // ── Navegação ──
+  function irParaStep2(){
+    document.getElementById('step1').style.display='none';
+    document.getElementById('step2').style.display='block';
+    renderStep2Summary();
+    // Mostra o upsell imediatamente com loading
+    document.getElementById('upsell-wrap').style.display='block';
+    document.getElementById('upsell-items').innerHTML = '<div class="loading"><div class="spinner"></div><span>Carregando ofertas...</span></div>';
+    carregarUpsell();
+    window.scrollTo(0,0);
+  }
+
+  function voltarStep1(){
+    document.getElementById('step2').style.display='none';
+    document.getElementById('step1').style.display='flex';
+    window.scrollTo(0,0);
+  }
+
+  function changeQty(d){ setQty(qty+d); }
+  function setQty(v){
+    if(isNaN(v)) return;
+    qty = Math.min(serviceMax, Math.max(serviceMin, v));
+    renderStep1();
+  }
+
+  function toggleReq(){
+    const b = document.getElementById('req-body');
+    const a = document.getElementById('req-arrow');
+    b.style.display = b.style.display==='none' ? 'block' : 'none';
+    a.textContent   = b.style.display==='none' ? '▼' : '▲';
+  }
+
+  function selectPay(m){
+    payMethod = m;
+    document.getElementById('opt-pix').classList.toggle('selected', m==='pix');
+    document.getElementById('opt-card').classList.toggle('selected', m==='card');
+    document.getElementById('pay-note').textContent = m==='pix'
+      ? 'Compra única via PIX, sem assinatura recorrente. O valor total do pedido é exibido no resumo antes do pagamento.'
+      : 'Pagamento via cartão de crédito. Processado com segurança.';
+    renderStep2Summary();
+  }
+
+  function finalizar(){
+    const link  = document.getElementById('profileLink')?.value.trim();
+    const email = document.getElementById('emailInput')?.value.trim();
+    const terms = document.getElementById('termsCheck')?.checked;
+    if(!link)  { alert(`Informe o link do seu perfil no ${cfg.label}!`); return; }
+    if(!email) { alert('Informe seu e-mail!'); return; }
+    if(!terms) { alert('Aceite os Termos de Uso para continuar.'); return; }
+    alert('Em breve: integração com Mercado Pago para gerar o QR Code Pix! 🚀');
+  }
+
+  // Aplica config da plataforma na página
+  document.getElementById('profileLinkLabel').textContent = cfg.linkLabel;
+  document.getElementById('profileLink').placeholder = cfg.placeholder;
+  if(document.getElementById('sum-plat')) document.getElementById('sum-plat').textContent = cfg.label;
+
+  renderStep1();
+</script>
+</body>
+</html>
