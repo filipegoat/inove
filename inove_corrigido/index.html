@@ -238,6 +238,10 @@
     .nav-links { display: none; }
     .nav-right { display: none; }
     .nav-hamburger { display: flex; margin-left: 0; }
+    .plataformas-grid { grid-template-columns: repeat(2, 1fr) !important; max-width: 100% !important; }
+    .passos-grid { grid-template-columns: 1fr !important; max-width: 100% !important; }
+    .passo-card { padding: 20px 16px !important; }
+    .plataforma-card { padding: 16px 12px !important; }
   }
 
   /* HERO */
@@ -739,7 +743,7 @@
 
   /* COMO FUNCIONA */
   .como-section { background: var(--bg); padding: 60px 40px; border-bottom: 1px solid var(--card-border); }
-  .passos-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 280px)); gap: 24px; justify-content: center; }
+  .passos-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 860px; margin: 0 auto; }
   .passo-card { background: var(--card); border: 1px solid var(--card-border); border-radius: 16px; padding: 32px 24px; text-align: center; transition: all 0.25s; position: relative; }
   .passo-card:hover { border-color: var(--purple); transform: translateY(-3px); box-shadow: 0 10px 30px var(--purple-glow); }
   .passo-icon { font-size: 42px; margin-bottom: 16px; display: block; }
