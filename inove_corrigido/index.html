@@ -81,6 +81,27 @@
 
   .nav-btn:hover { opacity: 0.85; transform: translateY(-1px); }
 
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+
+  .nav-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.2s;
+    white-space: nowrap;
+  }
+
+  .nav-links a:hover { color: var(--white); }
+
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+  }
+
   /* HERO */
   .hero {
     background: linear-gradient(160deg, #1A0A2E 0%, #0D0618 40%, var(--bg) 100%);
@@ -601,6 +622,14 @@
   <div class="nav-counter">
     Mais de <span id="counter">14.987</span> pedidos entregues hoje
   </div>
+
+  <!-- nav-links: menu de navegação -->
+  <nav class="nav-links">
+    <a href="servicos.html">Nossos Serviços</a>
+    <a href="pedido.html">Acompanhar Pedido</a>
+    <a href="#">Termos</a>
+    <a href="#">Contato</a>
+  </nav>
 
   <!-- nav-botao: botão de entrar/cadastrar -->
   <button class="nav-btn">Entrar / Cadastrar</button>
