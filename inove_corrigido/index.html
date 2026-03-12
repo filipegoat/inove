@@ -725,16 +725,71 @@
     max-width: 960px;
     margin: 0 auto;
   }
+  @property --glow-angle {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 0deg;
+  }
+
+  @keyframes spin-glow {
+    to { --glow-angle: 360deg; }
+  }
+
   .plataforma-card {
     background: var(--card);
-    border: 1px solid var(--card-border);
     border-radius: 16px;
     padding: 28px 24px;
     text-align: center;
-    transition: all 0.25s;
+    transition: transform 0.3s, box-shadow 0.3s;
     position: relative;
+    isolation: isolate;
+    /* borda normal via box-shadow interno */
+    box-shadow: inset 0 0 0 1px var(--card-border);
   }
-  .plataforma-card:hover { border-color: var(--purple); transform: translateY(-3px); box-shadow: 0 10px 30px var(--purple-glow); }
+
+  /* camada do glow giratório */
+  .plataforma-card::before {
+    content: '';
+    position: absolute;
+    inset: -1.5px;
+    border-radius: 17px;
+    background: conic-gradient(
+      from var(--glow-angle),
+      transparent 0deg,
+      transparent 75deg,
+      #7c3aed 100deg,
+      #a855f7 130deg,
+      #e040fb 160deg,
+      #ffffff 180deg,
+      #e040fb 200deg,
+      #a855f7 220deg,
+      transparent 245deg,
+      transparent 360deg
+    );
+    opacity: 0;
+    transition: opacity 0.4s;
+    z-index: -1;
+  }
+
+  /* fundo interno que cobre o conic-gradient deixando só a borda */
+  .plataforma-card::after {
+    content: '';
+    position: absolute;
+    inset: 1.5px;
+    border-radius: 15px;
+    background: var(--card);
+    z-index: -1;
+  }
+
+  .plataforma-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(168, 85, 247, 0.4), inset 0 0 0 0px transparent;
+  }
+
+  .plataforma-card:hover::before {
+    opacity: 1;
+    animation: spin-glow 2s linear infinite;
+  }
   .plat-icon { width: 60px; height: 60px; border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.3); }
   .plat-name { font-family: 'Orbitron', sans-serif; font-size: 15px; font-weight: 700; color: var(--white); margin-bottom: 8px; }
   .plat-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 18px; }
