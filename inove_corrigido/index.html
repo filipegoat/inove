@@ -32,16 +32,17 @@
 
   /* NAVBAR */
   nav {
-    display: grid;
-    grid-template-columns: auto auto 1fr auto;
+    display: flex;
     align-items: center;
     gap: 24px;
     padding: 14px 40px;
     background: rgba(10,10,15,0.95);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--card-border);
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
+    right: 0;
     z-index: 100;
   }
 
@@ -52,6 +53,7 @@
     background: linear-gradient(135deg, var(--purple-light), #E040FB);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    flex-shrink: 0;
   }
 
   .nav-counter {
@@ -64,6 +66,7 @@
     padding: 8px 16px;
     font-size: 13px;
     color: var(--text-muted);
+    flex-shrink: 0;
   }
 
   .nav-counter span { color: var(--purple-light); font-weight: 700; }
@@ -78,6 +81,8 @@
     cursor: pointer;
     font-size: 14px;
     transition: all 0.2s;
+    flex-shrink: 0;
+    white-space: nowrap;
   }
 
   .nav-btn:hover { opacity: 0.85; transform: translateY(-1px); }
@@ -87,6 +92,7 @@
     align-items: center;
     justify-content: center;
     gap: 28px;
+    flex: 1;
   }
 
   .nav-links a {
@@ -103,16 +109,95 @@
   .nav-right {
     display: flex;
     justify-content: flex-end;
+    margin-left: auto;
   }
 
+  /* Hamburger button — hidden on desktop */
+  .nav-hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    margin-left: auto;
+    z-index: 101;
+  }
+
+  .nav-hamburger span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: var(--text);
+    border-radius: 2px;
+    transition: all 0.3s;
+  }
+
+  .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+  .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* Mobile dropdown menu */
+  .nav-mobile-menu {
+    display: none;
+    position: fixed;
+    top: 57px;
+    left: 0;
+    right: 0;
+    background: rgba(10,10,15,0.98);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--card-border);
+    flex-direction: column;
+    padding: 16px 24px 24px;
+    gap: 4px;
+    z-index: 99;
+  }
+
+  .nav-mobile-menu.open { display: flex; }
+
+  .nav-mobile-menu a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--card-border);
+    transition: color 0.2s;
+  }
+
+  .nav-mobile-menu a:last-of-type { border-bottom: none; }
+  .nav-mobile-menu a:hover { color: var(--white); }
+
+  .nav-mobile-menu .nav-btn-mobile {
+    margin-top: 12px;
+    background: linear-gradient(135deg, var(--purple), var(--purple-light));
+    color: white;
+    border: none;
+    padding: 12px 22px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 15px;
+    text-align: center;
+    width: 100%;
+  }
+
+  /* Offset body so content isn't hidden behind fixed nav */
+  body { padding-top: 57px; }
+
   @media (max-width: 900px) {
-    nav { grid-template-columns: auto 1fr auto; gap: 12px; padding: 12px 20px; }
+    nav { gap: 12px; padding: 12px 20px; }
     .nav-counter { display: none; }
     .nav-links { gap: 16px; }
     .nav-links a { font-size: 12px; }
   }
-  @media (max-width: 600px) {
+
+  @media (max-width: 640px) {
     .nav-links { display: none; }
+    .nav-right { display: none; }
+    .nav-hamburger { display: flex; }
   }
 
   /* HERO */
@@ -648,7 +733,21 @@
   <div class="nav-right">
     <button class="nav-btn">Entrar / Cadastrar</button>
   </div>
+
+  <!-- Hambúrguer (visível só no mobile) -->
+  <button class="nav-hamburger" id="hamburger" aria-label="Abrir menu" onclick="toggleMobileMenu()">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<!-- Menu mobile dropdown -->
+<div class="nav-mobile-menu" id="mobileMenu">
+  <a href="#" onclick="fecharMenu();scrollTo('servicos')">Nossos Serviços</a>
+  <a href="#" onclick="fecharMenu();abrirModal('modal-pedido')">Acompanhar Pedido</a>
+  <a href="#" onclick="fecharMenu();abrirModal('modal-termos')">Termos</a>
+  <a href="#" onclick="fecharMenu();abrirModal('modal-contato')">Contato</a>
+  <button class="nav-btn-mobile" onclick="fecharMenu()">Entrar / Cadastrar</button>
+</div>
 
 <!-- ========== HERO ========== -->
 <section class="hero">
@@ -1323,8 +1422,24 @@
         m.classList.remove('ativo');
         document.body.style.overflow = '';
       });
+      fecharMenu();
     }
   });
+
+  // Mobile menu toggle
+  function toggleMobileMenu() {
+    const menu = document.getElementById('mobileMenu');
+    const btn = document.getElementById('hamburger');
+    menu.classList.toggle('open');
+    btn.classList.toggle('open');
+  }
+
+  function fecharMenu() {
+    const menu = document.getElementById('mobileMenu');
+    const btn = document.getElementById('hamburger');
+    menu.classList.remove('open');
+    btn.classList.remove('open');
+  }
 </script>
 </body>
 </html>
