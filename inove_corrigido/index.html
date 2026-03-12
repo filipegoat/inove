@@ -363,7 +363,9 @@
   .section {
     padding: 60px 40px;
     max-width: 1200px;
+    width: 100%;
     margin: 0 auto;
+    box-sizing: border-box;
   }
 
   .section-header {
@@ -410,6 +412,20 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 16px;
+  }
+
+  @media (max-width: 600px) {
+    .cards-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+    .card {
+      padding: 14px 12px;
+    }
+    .card img, .card .platform-icon {
+      width: 44px !important;
+      height: 44px !important;
+    }
   }
 
   .card {
@@ -708,7 +724,7 @@
 
   /* COMO FUNCIONA */
   .como-section { background: var(--bg); padding: 60px 40px; border-bottom: 1px solid var(--card-border); }
-  .passos-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .passos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
   .passo-card { background: var(--card); border: 1px solid var(--card-border); border-radius: 16px; padding: 32px 24px; text-align: center; transition: all 0.25s; position: relative; }
   .passo-card:hover { border-color: var(--purple); transform: translateY(-3px); box-shadow: 0 10px 30px var(--purple-glow); }
   .passo-icon { font-size: 42px; margin-bottom: 16px; display: block; }
@@ -745,9 +761,14 @@
     .nav-hamburger { display: flex !important; margin-left: 0; }
     .hero { padding: 50px 16px 40px; }
     .hero h1 { font-size: 28px; }
-    .section { padding: 30px 16px; }
-    .cards-grid { grid-template-columns: 1fr !important; }
-    .trust-bar { flex-direction: column; gap: 12px; padding: 24px 16px; }
+    .section { padding: 24px 12px !important; }
+    .cards-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 8px !important; }
+    .card { padding: 12px 10px !important; }
+    .passos-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+    .passo-card { padding: 20px 16px !important; }
+    .trust-bar { flex-direction: column; gap: 12px; padding: 20px 12px; }
+    .trust-item { width: 100%; }
+    .faq-list { margin: 0 !important; }
   }
 </style>
 </head>
