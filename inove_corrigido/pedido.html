@@ -56,7 +56,6 @@
 
     .ig-icon-lg {
       width: 56px; height: 56px; border-radius: 14px;
-      background: linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);
       display: flex; align-items: center; justify-content: center;
       margin: 0 auto 16px;
     }
@@ -249,7 +248,7 @@
     }
     .upsell-item:hover { background: rgba(80,0,120,0.35); }
     .upsell-item:last-child { border-bottom:none; }
-    .upsell-ig { width:44px; height:44px; border-radius:10px; flex-shrink:0; background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); display:flex; align-items:center; justify-content:center; }
+    .upsell-ig { width:44px; height:44px; border-radius:10px; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
     .upsell-info { flex:1; min-width:0; }
     .upsell-badge { font-size:10px; font-weight:700; padding:2px 8px; border-radius:20px; display:inline-block; margin-bottom:4px; }
     .badge-up { background:rgba(168,85,247,.2); color:var(--purple-light); border:1px solid rgba(168,85,247,.3); }
@@ -352,9 +351,7 @@
     <!-- Esquerda -->
     <div class="s1-card">
       <div class="s1-top">
-        <div class="ig-icon-lg">
-          <svg viewBox="0 0 24 24" fill="white" width="28" height="28"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-        </div>
+        <div class="ig-icon-lg" id="main-icon-lg"></div>
         <h2 id="s1-title">Precisa de quantos?</h2>
         <div class="discount-badge">💸 Mais quantidade = maior desconto</div>
       </div>
@@ -389,7 +386,9 @@
         <span class="sum-secure">🔒 Compra segura</span>
       </div>
       <div class="sum-item">
-        <div class="sum-ig" id="sum-ig-1"></div>
+        <div class="sum-ig">
+          <svg viewBox="0 0 24 24" fill="white" width="20" height="20"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+        </div>
         <div class="sum-item-info">
           <div class="sum-item-name" id="sum-name">—</div>
           <div class="sum-item-plat" id="sum-plat">—</div>
@@ -421,7 +420,9 @@
 
         <!-- Item principal -->
         <div class="order-item">
-          <div class="sum-ig" id="sum-ig-2"></div>
+          <div class="sum-ig">
+            <svg viewBox="0 0 24 24" fill="white" width="20" height="20"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+          </div>
           <div class="order-item-info">
             <div class="order-item-name" id="s2-item-name">—</div>
             <div class="order-item-qty" id="s2-item-qty">—</div>
@@ -711,7 +712,7 @@
       const isAdded = !!upsellAdded[s.service];
       return `
         <div class="upsell-item">
-          <div class="upsell-ig"><svg viewBox="0 0 24 24" fill="white" width="20" height="20"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg></div>
+          <div class="upsell-ig" style="background:${cfg.iconBg}">${cfg.icon}</div>
           <div class="upsell-info">
             <span class="upsell-badge ${badge.cls}">${badge.label}</span>
             <div class="upsell-name">${s.name}</div>
@@ -793,10 +794,12 @@
   document.getElementById('profileLink').placeholder = cfg.placeholder;
   if(document.getElementById('sum-plat')) document.getElementById('sum-plat').textContent = cfg.label;
 
-  // Injeta ícone e cor nos elementos estáticos
-  const iconHtml = `<div style="background:${cfg.iconBg};width:100%;height:100%;border-radius:10px;display:flex;align-items:center;justify-content:center;">${cfg.icon}</div>`;
-  document.getElementById('sum-ig-1').innerHTML = iconHtml;
-  document.getElementById('sum-ig-2').innerHTML = iconHtml;
+  // Injeta ícone e cor em todos os elementos estáticos
+  const iconLg = `<div style="background:${cfg.iconBg};width:100%;height:100%;border-radius:14px;display:flex;align-items:center;justify-content:center;">${cfg.icon.replace('width="20"','width="28"').replace('height="20"','height="28"')}</div>`;
+  const iconSm = `<div style="background:${cfg.iconBg};width:100%;height:100%;border-radius:10px;display:flex;align-items:center;justify-content:center;">${cfg.icon}</div>`;
+  if(document.getElementById('main-icon-lg')) document.getElementById('main-icon-lg').innerHTML = iconLg;
+  if(document.getElementById('sum-ig-1')) document.getElementById('sum-ig-1').innerHTML = iconSm;
+  if(document.getElementById('sum-ig-2')) document.getElementById('sum-ig-2').innerHTML = iconSm;
 
   renderStep1();
 </script>
