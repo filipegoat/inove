@@ -4,10 +4,10 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end();
 
   try {
-    const response = await fetch('https://justanotherpanel.com/api/v2', {
+    const response = await fetch('https://smmkings.com/api/v2', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: 'key=fe7e22fbb9c7996e689fb9be9a551b7a&action=services'
+      body: 'key=c64471f2dd55329c454f5c5e17fbff6d&action=services'
     });
 
     const data = await response.json();
