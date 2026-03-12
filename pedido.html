@@ -213,19 +213,41 @@
     .s2-hints li b { color:#fff; }
 
     /* Upsell */
-    .upsell-wrap { margin: 0 32px 24px; border-radius: 14px; overflow:hidden; border:1px solid #3a1a5e; }
+    .upsell-wrap {
+      margin: 24px 32px;
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+      /* borda pontilhada via outline + box-shadow */
+      border: 2px dashed rgba(168,85,247,0.6);
+      background:
+        linear-gradient(135deg, rgba(80,0,120,0.55) 0%, rgba(40,0,80,0.85) 100%);
+      box-shadow: 0 0 32px rgba(139,47,201,0.35), inset 0 0 40px rgba(80,0,120,0.2);
+    }
+    /* grade de pontinhos no fundo */
+    .upsell-wrap::before {
+      content:'';
+      position:absolute; inset:0; z-index:0; pointer-events:none;
+      background-image: radial-gradient(circle, rgba(168,85,247,0.18) 1px, transparent 1px);
+      background-size: 18px 18px;
+    }
     .upsell-hdr {
-      background: linear-gradient(135deg,#1a0a2e,#2a1040);
+      position: relative; z-index:1;
+      background: linear-gradient(135deg, rgba(100,0,160,0.7), rgba(60,0,100,0.9));
       padding:16px 20px; display:flex; align-items:center; gap:10px;
+      border-bottom: 1px solid rgba(168,85,247,0.25);
     }
     .upsell-hdr h3 { font-size:15px; font-weight:700; color:#fff; }
-    .upsell-hdr p { font-size:12px; color:var(--muted); }
+    .upsell-hdr p { font-size:12px; color:rgba(200,160,255,0.8); }
 
     .upsell-item {
-      padding:16px 20px; border-bottom:1px solid var(--border);
+      position: relative; z-index:1;
+      padding:16px 20px; border-bottom:1px solid rgba(168,85,247,0.15);
       display:flex; align-items:center; gap:12px;
-      background: #13131e;
+      background: rgba(20,0,40,0.45);
+      transition: background .15s;
     }
+    .upsell-item:hover { background: rgba(80,0,120,0.35); }
     .upsell-item:last-child { border-bottom:none; }
     .upsell-ig { width:44px; height:44px; border-radius:10px; flex-shrink:0; background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); display:flex; align-items:center; justify-content:center; }
     .upsell-info { flex:1; min-width:0; }
@@ -428,7 +450,7 @@
       <!-- Contato + Pagamento + Upsell (mesmo card) -->
       <div class="s2-card" style="margin-top:16px;">
         <!-- Upsell dentro do card -->
-        <div id="upsell-wrap" style="display:none; border-bottom:1px solid var(--border);">
+        <div id="upsell-wrap" style="display:none;">
           <div class="upsell-hdr">
             <span style="font-size:22px">🔥</span>
             <div>
