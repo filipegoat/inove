@@ -350,19 +350,48 @@
     font-weight: 600;
     color: var(--text);
     background: var(--card);
-    border: 1px solid var(--card-border);
     border-radius: 16px;
     padding: 28px 24px;
     min-width: min(200px, 40vw);
     text-align: center;
-    transition: all 0.25s;
+    transition: transform 0.3s, box-shadow 0.3s;
     flex: 1 1 160px;
+    position: relative;
+    isolation: isolate;
+    box-shadow: inset 0 0 0 1px var(--card-border);
+  }
+  .trust-item::before {
+    content: '';
+    position: absolute;
+    inset: -1.5px;
+    border-radius: 17px;
+    background: conic-gradient(
+      from var(--glow-angle),
+      transparent 0deg, transparent 75deg,
+      #7c3aed 100deg, #a855f7 130deg, #e040fb 160deg,
+      #ffffff 180deg,
+      #e040fb 200deg, #a855f7 220deg,
+      transparent 245deg, transparent 360deg
+    );
+    opacity: 0;
+    transition: opacity 0.4s;
+    z-index: -1;
   }
 
+  .trust-item::after {
+    content: '';
+    position: absolute;
+    inset: 1.5px;
+    border-radius: 15px;
+    background: var(--card);
+    z-index: -1;
+  }
+
+  .trust-item:hover::before { opacity: 1; animation: spin-glow 2s linear infinite; }
+
   .trust-item:hover {
-    border-color: var(--purple);
     transform: translateY(-3px);
-    box-shadow: 0 8px 24px var(--purple-glow);
+    box-shadow: 0 12px 40px rgba(168,85,247,0.35);
   }
 
   .trust-icon {
@@ -544,13 +573,43 @@
 
   .testimonial-card {
     background: var(--card);
-    border: 1px solid var(--card-border);
     border-radius: 16px;
     padding: 24px;
-    transition: all 0.25s;
+    transition: transform 0.3s, box-shadow 0.3s;
+    position: relative;
+    isolation: isolate;
+    box-shadow: inset 0 0 0 1px var(--card-border);
   }
 
-  .testimonial-card:hover { border-color: var(--purple); transform: translateY(-2px); }
+  .testimonial-card:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(168,85,247,0.35); }
+  .testimonial-card::before {
+    content: '';
+    position: absolute;
+    inset: -1.5px;
+    border-radius: 17px;
+    background: conic-gradient(
+      from var(--glow-angle),
+      transparent 0deg, transparent 75deg,
+      #7c3aed 100deg, #a855f7 130deg, #e040fb 160deg,
+      #ffffff 180deg,
+      #e040fb 200deg, #a855f7 220deg,
+      transparent 245deg, transparent 360deg
+    );
+    opacity: 0;
+    transition: opacity 0.4s;
+    z-index: -1;
+  }
+
+  .testimonial-card::after {
+    content: '';
+    position: absolute;
+    inset: 1.5px;
+    border-radius: 15px;
+    background: var(--card);
+    z-index: -1;
+  }
+
+  .testimonial-card:hover::before { opacity: 1; animation: spin-glow 2s linear infinite; }
 
   .t-header {
     display: flex;
@@ -799,8 +858,39 @@
   /* COMO FUNCIONA */
   .como-section { background: var(--bg); padding: 60px 40px; border-bottom: 1px solid var(--card-border); }
   .passos-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 860px; margin: 0 auto; }
-  .passo-card { background: var(--card); border: 1px solid var(--card-border); border-radius: 16px; padding: 32px 24px; text-align: center; transition: all 0.25s; position: relative; }
-  .passo-card:hover { border-color: var(--purple); transform: translateY(-3px); box-shadow: 0 10px 30px var(--purple-glow); }
+  .passo-card { background: var(--card);  border-radius: 16px; padding: 32px 24px; text-align: center; transition: transform 0.3s, box-shadow 0.3s;
+    isolation: isolate;
+    box-shadow: inset 0 0 0 1px var(--card-border); position: relative; }
+  .passo-card:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(168,85,247,0.35); }
+
+  .passo-card::before {
+    content: '';
+    position: absolute;
+    inset: -1.5px;
+    border-radius: 17px;
+    background: conic-gradient(
+      from var(--glow-angle),
+      transparent 0deg, transparent 75deg,
+      #7c3aed 100deg, #a855f7 130deg, #e040fb 160deg,
+      #ffffff 180deg,
+      #e040fb 200deg, #a855f7 220deg,
+      transparent 245deg, transparent 360deg
+    );
+    opacity: 0;
+    transition: opacity 0.4s;
+    z-index: -1;
+  }
+
+  .passo-card::after {
+    content: '';
+    position: absolute;
+    inset: 1.5px;
+    border-radius: 15px;
+    background: var(--card);
+    z-index: -1;
+  }
+
+  .passo-card:hover::before { opacity: 1; animation: spin-glow 2s linear infinite; }
   .passo-icon { font-size: 42px; margin-bottom: 16px; display: block; }
   .passo-titulo { font-family: 'Orbitron', sans-serif; font-size: 14px; font-weight: 700; color: var(--white); margin-bottom: 10px; line-height: 1.4; }
   .passo-desc { font-size: 13px; color: var(--text-muted); line-height: 1.65; }
@@ -1492,13 +1582,42 @@
     align-items: center;
     gap: 16px;
     background: var(--card);
-    border: 1px solid var(--card-border);
+    
     border-radius: 14px;
     padding: 18px 20px;
     text-decoration: none;
     transition: border-color 0.2s, transform 0.2s;
   }
-  .contato-item:hover { border-color: var(--purple); transform: translateY(-2px); }
+  .contato-item:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(168,85,247,0.35); }
+
+  .contato-item::before {
+    content: '';
+    position: absolute;
+    inset: -1.5px;
+    border-radius: 17px;
+    background: conic-gradient(
+      from var(--glow-angle),
+      transparent 0deg, transparent 75deg,
+      #7c3aed 100deg, #a855f7 130deg, #e040fb 160deg,
+      #ffffff 180deg,
+      #e040fb 200deg, #a855f7 220deg,
+      transparent 245deg, transparent 360deg
+    );
+    opacity: 0;
+    transition: opacity 0.4s;
+    z-index: -1;
+  }
+
+  .contato-item::after {
+    content: '';
+    position: absolute;
+    inset: 1.5px;
+    border-radius: 15px;
+    background: var(--card);
+    z-index: -1;
+  }
+
+  .contato-item:hover::before { opacity: 1; animation: spin-glow 2s linear infinite; }
   .contato-icon { font-size: 28px; }
 </style>
 
@@ -1586,6 +1705,71 @@
     menu.classList.remove('open');
     btn.classList.remove('open');
   }
+</script>
+
+<script>
+(function() {
+  const colors = ['#a855f7', '#7c3aed', '#e040fb', '#c026d3', '#ffffff'];
+  const trail = [];
+  const MAX = 18;
+
+  // Cria os pontos do rastro
+  for (let i = 0; i < MAX; i++) {
+    const dot = document.createElement('div');
+    const size = Math.max(2, 8 - i * 0.35);
+    dot.style.cssText = `
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      border-radius: 50%;
+      width: ${size}px;
+      height: ${size}px;
+      background: ${colors[i % colors.length]};
+      box-shadow: 0 0 ${size * 2}px ${colors[i % colors.length]};
+      opacity: 0;
+      transform: translate(-50%, -50%);
+      transition: none;
+      will-change: left, top, opacity;
+    `;
+    document.body.appendChild(dot);
+    trail.push({ el: dot, x: 0, y: 0 });
+  }
+
+  let mouseX = 0, mouseY = 0;
+
+  document.addEventListener('mousemove', function(e) {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+  });
+
+  function animate() {
+    // Primeiro ponto segue o mouse diretamente
+    trail[0].x += (mouseX - trail[0].x) * 0.4;
+    trail[0].y += (mouseY - trail[0].y) * 0.4;
+
+    // Cada ponto segue o anterior — cria linha suave
+    for (let i = 1; i < MAX; i++) {
+      trail[i].x += (trail[i-1].x - trail[i].x) * 0.55;
+      trail[i].y += (trail[i-1].y - trail[i].y) * 0.55;
+    }
+
+    // Atualiza posição e opacidade de cada ponto
+    trail.forEach((dot, i) => {
+      const opacity = 1 - (i / MAX);
+      dot.el.style.left = dot.x + 'px';
+      dot.el.style.top  = dot.y + 'px';
+      dot.el.style.opacity = opacity;
+    });
+
+    requestAnimationFrame(animate);
+  }
+
+  // Só ativa após o primeiro movimento
+  document.addEventListener('mousemove', function startTrail() {
+    animate();
+    document.removeEventListener('mousemove', startTrail);
+  }, { once: true });
+})();
 </script>
 </body>
 </html>
