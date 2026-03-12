@@ -716,8 +716,10 @@
   }
   .plataformas-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 12px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    max-width: 960px;
+    margin: 0 auto;
   }
   .plataforma-card {
     background: var(--card);
@@ -782,7 +784,7 @@
     .trust-bar { flex-direction: column; gap: 12px; padding: 20px 12px; }
     .trust-item { width: 100%; }
     .faq-list { margin: 0 !important; }
-    .plataformas-grid { grid-template-columns: repeat(3, 1fr) !important; gap: 8px !important; }
+    .plataformas-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; max-width: 100% !important; }
     .plataforma-card { padding: 12px 8px !important; }
     .testimonials-grid { grid-template-columns: 1fr !important; }
     .plataforma-card .plataforma-nome { font-size: 11px !important; }
