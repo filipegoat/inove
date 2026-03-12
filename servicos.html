@@ -336,6 +336,34 @@
       padding: 60px 20px;
     }
 
+    /* Seções de categoria */
+    .category-section { margin-bottom: 32px; }
+
+    .category-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      padding: 0 4px;
+    }
+
+    .category-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--purple-light);
+      letter-spacing: 1px;
+    }
+
+    .category-count {
+      font-size: 12px;
+      color: var(--text-muted);
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+
     /* Wrapper com borda arredondada */
     .table-wrapper {
       background: #0e0e16;
@@ -396,6 +424,28 @@
   <script>
     let todosServicos = [];
 
+    // Regras de categorias — ordem importa (primeira que bater vence)
+    const CATEGORIAS = [
+      { label: '👥 Seguidores Brasileiros',  test: s => /follower|seguidor/i.test(s) && /brazil|brasil|brazilian|br\b/i.test(s) },
+      { label: '🌍 Seguidores Mundiais',      test: s => /follower|seguidor/i.test(s) },
+      { label: '❤️ Curtidas Brasileiras',     test: s => /like|curtida/i.test(s)      && /brazil|brasil|brazilian|br\b/i.test(s) },
+      { label: '❤️ Curtidas',                 test: s => /like|curtida/i.test(s) },
+      { label: '👁️ Visualizações',            test: s => /view|visuali/i.test(s) },
+      { label: '💬 Comentários',              test: s => /comment|comentário/i.test(s) },
+      { label: '📖 Alcance / Impressões',     test: s => /reach|impression|alcance/i.test(s) },
+      { label: '▶️ Reels',                    test: s => /reel/i.test(s) },
+      { label: '📸 Stories',                  test: s => /storie/i.test(s) },
+      { label: '💾 Salvamentos',              test: s => /save|salvamento/i.test(s) },
+      { label: '📊 Outros',                   test: () => true },
+    ];
+
+    function detectarCategoria(nome) {
+      for (const cat of CATEGORIAS) {
+        if (cat.test(nome)) return cat.label;
+      }
+      return '📊 Outros';
+    }
+
     async function carregarServicos() {
       try {
         const response = await fetch('/api/services');
@@ -403,9 +453,7 @@
         const data = await response.json();
         if (!Array.isArray(data)) throw new Error('Formato inválido');
 
-        todosServicos = data.filter(s =>
-          s.name && s.name.toLowerCase().includes('instagram')
-        );
+        todosServicos = data.filter(s => s.name && s.name.toLowerCase().includes('instagram'));
         if (todosServicos.length === 0) todosServicos = data;
 
         renderServicos(todosServicos);
@@ -424,50 +472,71 @@
 
       if (lista.length === 0) {
         document.getElementById('content').innerHTML =
-          `<div class="table-wrapper"><div class="no-results">Nenhum serviço encontrado.</div></div>`;
+          `<div class="no-results">Nenhum serviço encontrado.</div>`;
         return;
       }
 
-      const rows = lista.map(s => {
-        const hasRefill = s.refill == 1 || s.refill === true || s.refill === 'true';
-        const refillBadge = hasRefill
-          ? `<span class="badge-refill">✓ Sim</span>`
-          : `<span class="badge-no-refill">—</span>`;
+      // Agrupa por categoria
+      const grupos = {};
+      for (const s of lista) {
+        const cat = detectarCategoria(s.name);
+        if (!grupos[cat]) grupos[cat] = [];
+        grupos[cat].push(s);
+      }
+
+      // Mantém a ordem definida em CATEGORIAS
+      const ordemCats = CATEGORIAS.map(c => c.label).filter(l => grupos[l]);
+
+      const html = ordemCats.map(cat => {
+        const servicos = grupos[cat];
+        const rows = servicos.map(s => {
+          const hasRefill = s.refill == 1 || s.refill === true || s.refill === 'true';
+          const refillBadge = hasRefill
+            ? `<span class="badge-refill">✓ Sim</span>`
+            : `<span class="badge-no-refill">—</span>`;
+          return `
+            <tr>
+              <td class="td-id">#${s.service}</td>
+              <td class="td-name">${s.name}</td>
+              <td class="td-price">
+                <span class="price-value">R$ ${parseFloat(s.rate).toFixed(2)}</span>
+                <span class="price-unit">/1000</span>
+              </td>
+              <td class="td-qty hide-mobile">
+                ${Number(s.min).toLocaleString('pt-BR')} — ${Number(s.max).toLocaleString('pt-BR')}
+              </td>
+              <td class="td-refill hide-mobile">${refillBadge}</td>
+              <td class="td-btn">
+                <button class="service-btn" onclick="pedido(${s.service}, '${s.name.replace(/'/g,"\\'")}')">Pedir →</button>
+              </td>
+            </tr>`;
+        }).join('');
 
         return `
-          <tr>
-            <td class="td-id">#${s.service}</td>
-            <td class="td-name">${s.name}</td>
-            <td class="td-price">
-              <span class="price-value">R$ ${parseFloat(s.rate).toFixed(2)}</span>
-              <span class="price-unit">/1000</span>
-            </td>
-            <td class="td-qty hide-mobile">
-              ${Number(s.min).toLocaleString('pt-BR')} — ${Number(s.max).toLocaleString('pt-BR')}
-            </td>
-            <td class="td-refill hide-mobile">${refillBadge}</td>
-            <td class="td-btn">
-              <button class="service-btn" onclick="pedido(${s.service}, '${s.name.replace(/'/g,"\\'")}')">Pedir →</button>
-            </td>
-          </tr>`;
+          <div class="category-section">
+            <div class="category-header">
+              <span class="category-title">${cat}</span>
+              <span class="category-count">${servicos.length} serviços</span>
+            </div>
+            <div class="table-wrapper">
+              <table class="services-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th class="right">Preço</th>
+                    <th class="right hide-mobile">Mín — Máx</th>
+                    <th class="center hide-mobile">Refill</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>${rows}</tbody>
+              </table>
+            </div>
+          </div>`;
       }).join('');
 
-      document.getElementById('content').innerHTML = `
-        <div class="table-wrapper">
-          <table class="services-table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Nome</th>
-                <th class="right">Preço</th>
-                <th class="right hide-mobile">Mín — Máx</th>
-                <th class="center hide-mobile">Refill</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>${rows}</tbody>
-          </table>
-        </div>`;
+      document.getElementById('content').innerHTML = html;
     }
 
     function filtrarServicos() {
