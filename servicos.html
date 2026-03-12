@@ -76,7 +76,7 @@
     /* HERO */
     .hero {
       background: linear-gradient(135deg, #0A0A0F 0%, #1a0a2e 50%, #0A0A0F 100%);
-      padding: 48px 32px 36px;
+      padding: 36px 32px 28px;
       text-align: center;
       border-bottom: 1px solid var(--card-border);
     }
@@ -91,14 +91,14 @@
       letter-spacing: 2px;
       padding: 6px 16px;
       border-radius: 20px;
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     .hero h1 {
       font-family: 'Orbitron', sans-serif;
-      font-size: 28px;
+      font-size: 26px;
       font-weight: 800;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     .hero h1 em {
@@ -110,7 +110,7 @@
 
     .hero p {
       color: var(--text-muted);
-      font-size: 15px;
+      font-size: 14px;
       max-width: 500px;
       margin: 0 auto;
     }
@@ -120,10 +120,13 @@
       display: flex;
       align-items: center;
       gap: 12px;
-      padding: 20px 32px;
+      padding: 16px 24px;
       background: var(--bg2);
       border-bottom: 1px solid var(--card-border);
       flex-wrap: wrap;
+      position: sticky;
+      top: 61px;
+      z-index: 90;
     }
 
     .search-input {
@@ -150,9 +153,9 @@
 
     /* CONTAINER */
     .container {
-      max-width: 1100px;
+      max-width: 1200px;
       margin: 0 auto;
-      padding: 32px 20px;
+      padding: 24px 20px;
     }
 
     /* LOADING */
@@ -188,118 +191,179 @@
       max-width: 500px;
     }
 
-    /* GRID DE SERVIÇOS */
-    .services-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 16px;
+    /* TABELA / LISTA */
+    .services-table {
+      width: 100%;
+      border-collapse: collapse;
+      animation: fadeIn 0.3s ease;
     }
 
-    .service-card {
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .services-table thead tr {
       background: var(--card);
-      border: 1px solid var(--card-border);
-      border-radius: 14px;
-      padding: 20px;
-      transition: border-color 0.2s, transform 0.2s;
-      cursor: pointer;
+      border-bottom: 2px solid var(--card-border);
     }
 
-    .service-card:hover {
-      border-color: var(--purple);
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(139,47,201,0.15);
-    }
-
-    .service-header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-
-    .service-id {
+    .services-table thead th {
+      padding: 12px 16px;
       font-size: 11px;
-      color: var(--text-muted);
       font-family: 'Orbitron', sans-serif;
-      background: rgba(139,47,201,0.1);
-      border: 1px solid rgba(139,47,201,0.2);
-      padding: 3px 8px;
-      border-radius: 6px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      text-align: left;
       white-space: nowrap;
     }
 
-    .service-name {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text);
-      line-height: 1.4;
-      flex: 1;
+    .services-table thead th.right { text-align: right; }
+    .services-table thead th.center { text-align: center; }
+
+    .services-table tbody tr {
+      border-bottom: 1px solid #1e1e2e;
+      transition: background 0.15s;
     }
 
-    .service-footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-top: 14px;
-      padding-top: 14px;
-      border-top: 1px solid var(--card-border);
-      flex-wrap: wrap;
-      gap: 8px;
+    .services-table tbody tr:hover {
+      background: rgba(139,47,201,0.06);
     }
 
-    .service-price {
+    .services-table tbody td {
+      padding: 13px 16px;
+      font-size: 13px;
+      vertical-align: middle;
+    }
+
+    /* ID */
+    .td-id {
       font-family: 'Orbitron', sans-serif;
-      font-size: 15px;
+      font-size: 11px;
+      color: var(--purple-light);
+      white-space: nowrap;
+      width: 70px;
+    }
+
+    /* Nome */
+    .td-name {
+      color: var(--text);
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    /* Preço */
+    .td-price {
+      text-align: right;
+      white-space: nowrap;
+      width: 130px;
+    }
+
+    .price-value {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 14px;
       font-weight: 700;
       background: linear-gradient(135deg, var(--purple-light), #E040FB);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
-    .service-qty {
-      font-size: 12px;
+    .price-unit {
+      font-size: 11px;
       color: var(--text-muted);
+      margin-left: 2px;
+    }
+
+    /* Min/Max */
+    .td-qty {
+      text-align: right;
+      white-space: nowrap;
+      color: var(--text-muted);
+      font-size: 12px;
+      width: 180px;
+    }
+
+    /* Refill */
+    .td-refill {
+      text-align: center;
+      width: 70px;
+    }
+
+    .badge-refill {
+      display: inline-block;
+      background: rgba(34,197,94,0.12);
+      border: 1px solid rgba(34,197,94,0.3);
+      color: #4ade80;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 20px;
+    }
+
+    .badge-no-refill {
+      display: inline-block;
+      color: #555;
+      font-size: 13px;
+    }
+
+    /* Botão */
+    .td-btn {
+      text-align: right;
+      width: 100px;
     }
 
     .service-btn {
       background: linear-gradient(135deg, var(--purple), var(--purple-light));
       color: white;
       border: none;
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-size: 13px;
+      padding: 7px 14px;
+      border-radius: 7px;
+      font-size: 12px;
       font-weight: 600;
       cursor: pointer;
-      transition: opacity 0.2s;
+      transition: opacity 0.2s, transform 0.15s;
       font-family: 'DM Sans', sans-serif;
+      white-space: nowrap;
     }
-    .service-btn:hover { opacity: 0.85; }
+    .service-btn:hover { opacity: 0.85; transform: scale(1.03); }
 
-    /* NENHUM RESULTADO */
+    /* Sem resultados */
     .no-results {
       text-align: center;
       color: var(--text-muted);
       padding: 60px 20px;
-      grid-column: 1/-1;
     }
 
-    @media (max-width: 600px) {
+    /* Wrapper com borda arredondada */
+    .table-wrapper {
+      background: #0e0e16;
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    /* Mobile */
+    @media (max-width: 700px) {
       nav { padding: 12px 16px; }
-      .hero { padding: 32px 16px 24px; }
-      .hero h1 { font-size: 22px; }
-      .filter-bar { padding: 14px 16px; }
-      .container { padding: 20px 12px; }
-      .services-grid { grid-template-columns: 1fr; }
+      .hero { padding: 28px 16px 20px; }
+      .hero h1 { font-size: 20px; }
+      .filter-bar { padding: 12px 16px; top: 57px; }
+      .container { padding: 16px 10px; }
+
+      .services-table thead th.hide-mobile,
+      .services-table tbody td.hide-mobile { display: none; }
+
+      .services-table tbody td { padding: 12px 10px; }
+      .td-name { font-size: 12px; }
     }
   </style>
 </head>
 <body>
 
   <nav>
-    <a href="index.html" class="nav-back">
-      ← Voltar
-    </a>
+    <a href="index.html" class="nav-back">← Voltar</a>
     <div class="nav-title">
       <div class="plat-icon-nav">
         <svg viewBox="0 0 24 24" fill="white" width="18" height="18"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
@@ -316,7 +380,7 @@
   </div>
 
   <div class="filter-bar">
-    <input type="text" class="search-input" id="searchInput" placeholder="🔍  Buscar serviço..." oninput="filtrarServicos()">
+    <input type="text" class="search-input" id="searchInput" placeholder="🔍  Buscar serviço ou ID..." oninput="filtrarServicos()">
     <span class="results-count" id="resultsCount"></span>
   </div>
 
@@ -339,63 +403,78 @@
         const data = await response.json();
         if (!Array.isArray(data)) throw new Error('Formato inválido');
 
-        // Filtra só Instagram
         todosServicos = data.filter(s =>
           s.name && s.name.toLowerCase().includes('instagram')
         );
-
-        if (todosServicos.length === 0) {
-          // Se não encontrou com filtro, mostra todos
-          todosServicos = data;
-        }
+        if (todosServicos.length === 0) todosServicos = data;
 
         renderServicos(todosServicos);
-
       } catch (err) {
         document.getElementById('content').innerHTML = `
           <div class="error-box">
             <strong>Não foi possível carregar os serviços.</strong><br>
             <small style="margin-top:8px;display:block;">Tente novamente em instantes.</small>
-          </div>
-        `;
+          </div>`;
       }
     }
 
     function renderServicos(lista) {
-      const count = document.getElementById('resultsCount');
-      count.textContent = `${lista.length} serviço${lista.length !== 1 ? 's' : ''} encontrado${lista.length !== 1 ? 's' : ''}`;
+      document.getElementById('resultsCount').textContent =
+        `${lista.length} serviço${lista.length !== 1 ? 's' : ''} encontrado${lista.length !== 1 ? 's' : ''}`;
 
       if (lista.length === 0) {
-        document.getElementById('content').innerHTML = `
-          <div class="services-grid">
-            <div class="no-results">Nenhum serviço encontrado para sua busca.</div>
-          </div>`;
+        document.getElementById('content').innerHTML =
+          `<div class="table-wrapper"><div class="no-results">Nenhum serviço encontrado.</div></div>`;
         return;
       }
 
-      const html = `<div class="services-grid">` + lista.map(s => `
-        <div class="service-card">
-          <div class="service-header">
-            <div class="service-name">${s.name}</div>
-            <div class="service-id">#${s.service}</div>
-          </div>
-          <div class="service-footer">
-            <div>
-              <div class="service-price">R$ ${parseFloat(s.rate).toFixed(2)} <span style="font-size:11px;color:var(--text-muted);-webkit-text-fill-color:var(--text-muted);font-family:'DM Sans';">/1000</span></div>
-              <div class="service-qty">Mín: ${s.min} — Máx: ${Number(s.max).toLocaleString('pt-BR')}</div>
-            </div>
-            <button class="service-btn" onclick="pedido(${s.service}, '${s.name.replace(/'/g,"\\'")}')">Pedir →</button>
-          </div>
-        </div>
-      `).join('') + `</div>`;
+      const rows = lista.map(s => {
+        const hasRefill = s.refill == 1 || s.refill === true || s.refill === 'true';
+        const refillBadge = hasRefill
+          ? `<span class="badge-refill">✓ Sim</span>`
+          : `<span class="badge-no-refill">—</span>`;
 
-      document.getElementById('content').innerHTML = html;
+        return `
+          <tr>
+            <td class="td-id">#${s.service}</td>
+            <td class="td-name">${s.name}</td>
+            <td class="td-price">
+              <span class="price-value">R$ ${parseFloat(s.rate).toFixed(2)}</span>
+              <span class="price-unit">/1000</span>
+            </td>
+            <td class="td-qty hide-mobile">
+              ${Number(s.min).toLocaleString('pt-BR')} — ${Number(s.max).toLocaleString('pt-BR')}
+            </td>
+            <td class="td-refill hide-mobile">${refillBadge}</td>
+            <td class="td-btn">
+              <button class="service-btn" onclick="pedido(${s.service}, '${s.name.replace(/'/g,"\\'")}')">Pedir →</button>
+            </td>
+          </tr>`;
+      }).join('');
+
+      document.getElementById('content').innerHTML = `
+        <div class="table-wrapper">
+          <table class="services-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th class="right">Preço</th>
+                <th class="right hide-mobile">Mín — Máx</th>
+                <th class="center hide-mobile">Refill</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>`;
     }
 
     function filtrarServicos() {
       const busca = document.getElementById('searchInput').value.toLowerCase();
       const filtrado = todosServicos.filter(s =>
-        s.name.toLowerCase().includes(busca)
+        s.name.toLowerCase().includes(busca) ||
+        String(s.service).includes(busca)
       );
       renderServicos(filtrado);
     }
