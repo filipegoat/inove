@@ -296,7 +296,7 @@
             <td class="td-qty hide-mobile">${Number(s.min).toLocaleString('pt-BR')} — ${Number(s.max).toLocaleString('pt-BR')}</td>
             <td class="td-refill hide-mobile">${refillBadge}</td>
             <td class="td-btn">
-              <button class="service-btn" onclick="pedido(${s.service}, '${s.name.replace(/'/g,"\\'")}')">Pedir →</button>
+              <button class="service-btn" onclick="location.href='pedido.html?id=${s.service}&name=${encodeURIComponent(s.name)}&rate=${s.rate}&min=${s.min}&max=${s.max}'">Pedir →</button>
             </td>
           </tr>`;
       }).join('');
