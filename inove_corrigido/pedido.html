@@ -566,9 +566,12 @@
   let payMethod = 'pix';
 
   function calcPreco(qty) {
-    const sub = (serviceRate / 1000) * qty;
+    const USD_TO_BRL = 5.80;  // taxa de câmbio + margem
+    const MARKUP = 2.5;       // multiplica o custo por 2.5x (lucro)
+    const custoUSD = (serviceRate / 1000) * qty;
+    const sub = custoUSD * USD_TO_BRL * MARKUP;
     const disc = payMethod === 'pix' ? sub * 0.05 : 0;
-    const total = sub - disc;
+    const total = Math.max(1.00, sub - disc); // mínimo R$ 1,00
     return { sub, disc, total };
   }
 
