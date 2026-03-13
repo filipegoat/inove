@@ -690,18 +690,21 @@
     if (btn) { btn.disabled = true; btn.innerHTML = '⏳ Gerando pagamento...'; }
 
     try {
+      const payload = {
+        service_id:   serviceId,
+        service_name: serviceName,
+        quantity:     qty,
+        price:        total.toFixed(2),
+        buyer_email:  email || 'cliente@inove.com.br',
+        platform:     platform,
+        profile_link: link,
+      };
+      console.log('Enviando para API:', payload);
+
       const res = await fetch('/api/create-payment', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          service_id:   serviceId,
-          service_name: serviceName,
-          quantity:     qty,
-          price:        total.toFixed(2),
-          buyer_email:  email || 'cliente@inove.com.br',
-          platform:     platform,
-          profile_link: link,
-        }),
+        body: JSON.stringify(payload),
       });
 
       const data = await res.json();
