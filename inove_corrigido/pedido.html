@@ -682,10 +682,8 @@
 
     if (!link)  { showCustomAlert(`Preencha o ${cfg.linkLabel}.`, 'warn'); return; }
     if (!terms) { showCustomAlert('Aceite os Termos de Uso para continuar.', 'warn'); return; }
-    if (cart.length === 0) { showCustomAlert('Adicione pelo menos um serviço ao carrinho.', 'warn'); return; }
-
-    const totalPrice = cart.reduce((sum, i) => sum + i.price, 0);
-    const firstItem  = cart[0];
+    const qty = parseInt(document.getElementById('qtyInput').value) || serviceMin;
+    const { total } = calcPreco(qty);
 
     const btn = document.getElementById('btnFinalizar');
     const btnOriginal = btn ? btn.innerHTML : '';
@@ -696,12 +694,12 @@
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          service_id:   firstItem.service,
-          service_name: firstItem.name,
-          quantity:     firstItem.qty,
-          price:        totalPrice.toFixed(2),
+          service_id:   serviceId,
+          service_name: serviceName,
+          quantity:     qty,
+          price:        total.toFixed(2),
           buyer_email:  email || 'cliente@inove.com.br',
-          platform:     cfg.platform || 'instagram',
+          platform:     platform,
           profile_link: link,
         }),
       });
@@ -715,7 +713,7 @@
         return;
       }
 
-      mostrarQRCode(data, totalPrice);
+      mostrarQRCode(data, total);
 
     } catch (err) {
       console.error('Erro:', err);
