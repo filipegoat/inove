@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Comprar Seguidores & Curtidas no Instagram</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
   :root {
     --purple: #8B2FC9;
@@ -19,6 +20,175 @@
     --text: #F0F0FF;
     --text-muted: #8888AA;
     --white: #FFFFFF;
+  }
+
+  [data-theme="light"] {
+    --purple: #7B22B9;
+    --purple-light: #9333EA;
+    --purple-dark: #5B12A0;
+    --purple-glow: rgba(139, 47, 201, 0.25);
+    --bg: #F5F5FC;
+    --bg2: #EBEBF5;
+    --bg3: #E2E2F0;
+    --card: #FFFFFF;
+    --card-border: #D8D8EE;
+    --text: #0A0A1A;
+    --text-muted: #55557A;
+    --white: #0A0A1A;
+  }
+  [data-theme="light"] body { background: var(--bg); color: var(--text); }
+  [data-theme="light"] nav { background: rgba(245,245,252,0.95); }
+  [data-theme="light"] .nav-mobile-menu { background: rgba(245,245,252,0.98); }
+  [data-theme="light"] .hero { background: linear-gradient(160deg,#EDE5FC 0%,#F0EAFF 40%,var(--bg) 100%); }
+  [data-theme="light"] .trust-bar,
+  [data-theme="light"] .servicos-section,
+  [data-theme="light"] .cta-section,
+  [data-theme="light"] .section-wrapper { background: var(--bg2); border-color: var(--card-border); }
+  [data-theme="light"] .como-section,
+  [data-theme="light"] footer { background: var(--bg); }
+  [data-theme="light"] .card,
+  [data-theme="light"] .plataforma-card,
+  [data-theme="light"] .passo-card,
+  [data-theme="light"] .testimonial-card,
+  [data-theme="light"] .faq-item { background: #fff; }
+  [data-theme="light"] .qty-input,
+  [data-theme="light"] .field-input { background: #F0F0FA; color: var(--text); }
+
+  /* Theme toggle */
+  .theme-toggle-wrap { display:flex; align-items:center; gap:6px; flex-shrink:0; }
+  .theme-icon { font-size:14px; }
+  .theme-toggle {
+    background: var(--card); border: 1px solid var(--card-border);
+    border-radius: 20px; width:42px; height:22px;
+    cursor:pointer; position:relative; flex-shrink:0;
+    transition: background 0.3s;
+  }
+  .theme-toggle::after {
+    content:''; position:absolute; top:2px; left:2px;
+    width:18px; height:18px; border-radius:50%;
+    background: linear-gradient(135deg,var(--purple),var(--purple-light));
+    transition: transform 0.3s;
+  }
+  [data-theme="light"] .theme-toggle::after { transform: translateX(20px); }
+
+  /* Notification bell */
+  .notif-wrap { position:relative; flex-shrink:0; }
+  .notif-bell {
+    background: var(--card); border: 1px solid var(--card-border);
+    border-radius: 10px; width:36px; height:36px;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer; font-size:16px; transition:border-color 0.2s;
+  }
+  .notif-bell:hover { border-color: var(--purple); }
+  .notif-dot {
+    position:absolute; top:4px; right:4px;
+    width:8px; height:8px; background:#f87171;
+    border-radius:50%; border:2px solid var(--bg);
+    pointer-events:none;
+  }
+  .notif-dropdown {
+    position:absolute; top:46px; right:0;
+    width:300px; background:var(--card);
+    border:1px solid var(--card-border); border-radius:14px;
+    box-shadow:0 20px 50px rgba(0,0,0,0.4);
+    z-index:200; display:none; overflow:hidden;
+  }
+  .notif-dropdown.open { display:block; animation:fadeDown 0.2s ease; }
+  @keyframes fadeDown { from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)} }
+  .notif-header { padding:12px 14px; border-bottom:1px solid var(--card-border); display:flex; justify-content:space-between; align-items:center; }
+  .notif-header b { font-size:13px; color:var(--text); }
+  .notif-clear { font-size:11px; color:var(--purple-light); cursor:pointer; background:none; border:none; font-family:inherit; }
+  .notif-item { padding:11px 14px; border-bottom:1px solid var(--card-border); display:flex; gap:10px; }
+  .notif-item:last-child { border-bottom:none; }
+  .notif-item.unread { background:rgba(139,47,201,0.05); }
+  .notif-ico { font-size:17px; flex-shrink:0; margin-top:1px; }
+  .notif-body { font-size:12px; color:var(--text-muted); line-height:1.5; }
+  .notif-body strong { color:var(--text); display:block; margin-bottom:1px; }
+  .notif-time { font-size:10px; color:var(--text-muted); margin-top:2px; }
+
+  /* ========== DASHBOARD STATS ========== */
+  .dashboard-section {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--card-border);
+    padding: 28px 40px;
+  }
+  .dashboard-inner { max-width:1200px; margin:0 auto; }
+  .dashboard-top {
+    display:flex; align-items:center; justify-content:space-between;
+    margin-bottom:20px; flex-wrap:wrap; gap:12px;
+  }
+  .dashboard-greeting { font-size:14px; color:var(--text-muted); }
+  .dashboard-greeting strong { color:var(--text); font-size:16px; display:block; margin-bottom:2px; }
+  .stats-grid {
+    display:grid;
+    grid-template-columns: repeat(4,1fr);
+    gap:14px;
+    margin-bottom:24px;
+  }
+  .stat-card {
+    background: var(--card); border:1px solid var(--card-border);
+    border-radius:14px; padding:18px 20px;
+    transition:transform 0.2s, box-shadow 0.2s;
+  }
+  .stat-card:hover { transform:translateY(-2px); box-shadow:0 8px 28px var(--purple-glow); }
+  .stat-label { font-size:11px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.8px; margin-bottom:8px; }
+  .stat-value { font-family:'Orbitron',sans-serif; font-size:22px; font-weight:800; color:var(--white); margin-bottom:4px; }
+  .stat-value.green { background:linear-gradient(135deg,#22c55e,#4ade80); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .stat-value.purple { background:linear-gradient(135deg,var(--purple-light),#E040FB); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .stat-delta { font-size:11px; display:flex; align-items:center; gap:4px; }
+  .stat-delta.up { color:#22c55e; }
+  .stat-delta.down { color:#f87171; }
+
+  /* Chart */
+  .chart-row { display:grid; grid-template-columns:1fr 320px; gap:16px; }
+  .chart-card {
+    background:var(--card); border:1px solid var(--card-border);
+    border-radius:14px; padding:20px 22px;
+  }
+  .chart-card-title { font-size:13px; font-weight:700; color:var(--text); margin-bottom:16px; display:flex; justify-content:space-between; align-items:center; }
+  .chart-period-btns { display:flex; gap:4px; }
+  .chart-period-btn {
+    font-size:11px; padding:3px 10px; border-radius:6px; cursor:pointer;
+    border:1px solid var(--card-border); background:none;
+    color:var(--text-muted); font-family:inherit; transition:all 0.15s;
+  }
+  .chart-period-btn.active { background:var(--purple); border-color:var(--purple); color:white; }
+
+  /* Transaction history */
+  .txn-table { width:100%; border-collapse:collapse; }
+  .txn-table th { font-size:11px; color:var(--text-muted); text-align:left; padding:6px 10px; border-bottom:1px solid var(--card-border); text-transform:uppercase; letter-spacing:0.6px; }
+  .txn-table td { font-size:13px; color:var(--text); padding:10px 10px; border-bottom:1px solid var(--card-border); }
+  .txn-table tr:last-child td { border-bottom:none; }
+  .txn-table tr:hover td { background:rgba(139,47,201,0.04); }
+  .txn-status { display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:600; padding:3px 9px; border-radius:20px; }
+  .txn-status.done { background:rgba(34,197,94,0.12); color:#22c55e; }
+  .txn-status.pending { background:rgba(234,179,8,0.12); color:#eab308; }
+  .txn-status.fail { background:rgba(248,113,113,0.12); color:#f87171; }
+
+  /* Filtros */
+  .txn-filters { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+  .txn-filter-select {
+    background:var(--card); border:1px solid var(--card-border);
+    color:var(--text); font-size:12px; padding:6px 12px;
+    border-radius:8px; font-family:inherit; outline:none; cursor:pointer;
+  }
+  .txn-filter-select:focus { border-color:var(--purple-light); }
+  .export-btn {
+    background:linear-gradient(135deg,var(--purple-dark),var(--purple));
+    color:white; border:none; padding:6px 14px; border-radius:8px;
+    font-size:12px; font-weight:600; cursor:pointer; font-family:inherit;
+    transition:opacity 0.2s; margin-left:auto;
+  }
+  .export-btn:hover { opacity:0.85; }
+
+  @media (max-width:900px) {
+    .stats-grid { grid-template-columns:repeat(2,1fr); }
+    .chart-row { grid-template-columns:1fr; }
+    .dashboard-section { padding:20px 16px; }
+  }
+  @media (max-width:500px) {
+    .stats-grid { grid-template-columns:1fr 1fr; gap:8px; }
+    .stat-value { font-size:18px; }
   }
 
   *, *::before, *::after {
@@ -640,9 +810,47 @@
     border-radius: 14px;
     overflow: hidden;
     transition: border-color 0.2s;
+    position: relative;
+    isolation: isolate;
   }
 
-  .faq-item.open { border-color: var(--purple); }
+  .faq-item.open { border-color: transparent; }
+
+  /* glow giratório na borda do FAQ aberto */
+  .faq-item::before {
+    content: '';
+    position: absolute;
+    inset: -1.5px;
+    border-radius: 15.5px;
+    background: conic-gradient(
+      from var(--glow-angle),
+      transparent 0deg,
+      transparent 75deg,
+      #7c3aed 100deg,
+      #a855f7 130deg,
+      #e040fb 160deg,
+      #ffffff 180deg,
+      #e040fb 200deg,
+      #a855f7 220deg,
+      transparent 245deg,
+      transparent 360deg
+    );
+    opacity: 0;
+    transition: opacity 0.4s;
+    z-index: -1;
+  }
+  .faq-item::after {
+    content: '';
+    position: absolute;
+    inset: 1.5px;
+    border-radius: 13px;
+    background: var(--card);
+    z-index: -1;
+  }
+  .faq-item.open::before {
+    opacity: 1;
+    animation: spin-glow 2s linear infinite;
+  }
 
   .faq-q {
     width: 100%;
@@ -759,8 +967,41 @@
     font-size: 15px;
     text-decoration: none;
     transition: all 0.2s;
+    position: relative;
+    isolation: isolate;
   }
-  .cta-btn:hover { background: #1a1a2e; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+  .cta-btn::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 52px;
+    background: conic-gradient(
+      from var(--glow-angle),
+      transparent 0deg,
+      transparent 75deg,
+      #7c3aed 100deg,
+      #a855f7 130deg,
+      #e040fb 160deg,
+      #ffffff 180deg,
+      #e040fb 200deg,
+      #a855f7 220deg,
+      transparent 245deg,
+      transparent 360deg
+    );
+    opacity: 0;
+    transition: opacity 0.35s;
+    z-index: -1;
+  }
+  .cta-btn::after {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    border-radius: 50px;
+    background: #0A0A0F;
+    z-index: -1;
+  }
+  .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+  .cta-btn:hover::before { opacity: 1; animation: spin-glow 2s linear infinite; }
 
   /* SERVIÇOS SECTION */
   .servicos-section {
@@ -852,8 +1093,22 @@
   .plat-icon { width: 60px; height: 60px; border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.3); }
   .plat-name { font-family: 'Orbitron', sans-serif; font-size: 15px; font-weight: 700; color: var(--white); margin-bottom: 8px; }
   .plat-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 18px; }
-  .plat-btn { display: inline-block; color: var(--purple-light); font-size: 13px; font-weight: 600; text-decoration: none; transition: color 0.2s; }
-  .plat-btn:hover { color: var(--white); }
+  .plat-btn {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--purple-dark), var(--purple));
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    padding: 8px 20px;
+    border-radius: 20px;
+    transition: opacity 0.2s, transform 0.2s;
+    margin-top: 4px;
+  }
+  .plat-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+
+  /* card inteiro clicável */
+  .plataforma-card { cursor: pointer; }
 
   /* COMO FUNCIONA */
   .como-section { background: var(--bg); padding: 60px 40px; border-bottom: 1px solid var(--card-border); }
@@ -966,7 +1221,28 @@
   </div>
 
   <!-- nav-botao: botão de entrar/cadastrar -->
-  <div class="nav-right">
+  <div class="nav-right" style="display:flex;align-items:center;gap:10px;">
+
+    <!-- Toggle dark/light -->
+    <div class="theme-toggle-wrap">
+      <span class="theme-icon" id="themeIcon">🌙</span>
+      <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Alternar tema"></button>
+    </div>
+
+    <!-- Sino de notificações -->
+    <div class="notif-wrap">
+      <div class="notif-bell" id="notifBell" onclick="toggleNotif()">🔔
+        <span class="notif-dot" id="notifDot"></span>
+      </div>
+      <div class="notif-dropdown" id="notifDropdown">
+        <div class="notif-header">
+          <b>Notificações</b>
+          <button class="notif-clear" onclick="clearNotifs()">Marcar como lido</button>
+        </div>
+        <div id="notifList"></div>
+      </div>
+    </div>
+
     <button class="nav-btn">Entrar / Cadastrar</button>
   </div>
 
@@ -1028,103 +1304,103 @@
     <div class="plataformas-grid">
 
       <!-- plataforma-instagram -->
-      <div class="plataforma-card">
+      <a href="servicos.html" class="plataforma-card" style="text-decoration:none;display:block;">
         <span class="label">plataforma-instagram</span>
         <div class="plat-icon" style="background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);">
           <svg viewBox="0 0 24 24" fill="white" width="28" height="28"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
         </div>
         <div class="plat-name">Instagram</div>
         <div class="plat-desc">Clique em <strong>selecionar</strong> para escolher o tipo de serviço que deseja.</div>
-        <a href="servicos.html" class="plat-btn">Selecionar →</a>
-      </div>
+        <span class="plat-btn">Selecionar →</span>
+      </a>
 
       <!-- plataforma-spotify -->
-      <div class="plataforma-card">
+      <a href="spotify.html" class="plataforma-card" style="text-decoration:none;display:block;">
         <span class="label">plataforma-spotify</span>
         <div class="plat-icon" style="background:#1DB954;">
           <svg viewBox="0 0 24 24" fill="white" width="28" height="28"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
         </div>
         <div class="plat-name">Spotify</div>
         <div class="plat-desc">Clique em <strong>selecionar</strong> para escolher o tipo de serviço que deseja.</div>
-        <a href="spotify.html" class="plat-btn">Selecionar →</a>
-      </div>
+        <span class="plat-btn">Selecionar →</span>
+      </a>
 
       <!-- plataforma-tiktok -->
-      <div class="plataforma-card">
+      <a href="tiktok.html" class="plataforma-card" style="text-decoration:none;display:block;">
         <span class="label">plataforma-tiktok</span>
         <div class="plat-icon" style="background:#010101;">
           <svg viewBox="0 0 24 24" fill="white" width="28" height="28"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.27 8.27 0 004.84 1.55V6.79a4.85 4.85 0 01-1.07-.1z"/></svg>
         </div>
         <div class="plat-name">TikTok</div>
         <div class="plat-desc">Clique em <strong>selecionar</strong> para escolher o tipo de serviço que deseja.</div>
-        <a href="tiktok.html" class="plat-btn">Selecionar →</a>
-      </div>
+        <span class="plat-btn">Selecionar →</span>
+      </a>
 
       <!-- plataforma-youtube -->
-      <div class="plataforma-card">
+      <a href="youtube.html" class="plataforma-card" style="text-decoration:none;display:block;">
         <span class="label">plataforma-youtube</span>
         <div class="plat-icon" style="background:#FF0000;">
           <svg viewBox="0 0 24 24" fill="white" width="28" height="28"><path d="M23.495 6.205a3.007 3.007 0 00-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 00.527 6.205a31.247 31.247 0 00-.522 5.805 31.247 31.247 0 00.522 5.783 3.007 3.007 0 002.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 002.088-2.088 31.247 31.247 0 00.5-5.783 31.247 31.247 0 00-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>
         </div>
         <div class="plat-name">Youtube</div>
         <div class="plat-desc">Clique em <strong>selecionar</strong> para escolher o tipo de serviço que deseja.</div>
-        <a href="youtube.html" class="plat-btn">Selecionar →</a>
-      </div>
+        <span class="plat-btn">Selecionar →</span>
+      </a>
 
       <!-- plataforma-x -->
-      <div class="plataforma-card">
+      <a href="x.html" class="plataforma-card" style="text-decoration:none;display:block;">
         <span class="label">plataforma-x</span>
         <div class="plat-icon" style="background:#000000;">
           <svg viewBox="0 0 24 24" fill="white" width="28" height="28"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.258 5.63 5.906-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
         </div>
         <div class="plat-name">X</div>
         <div class="plat-desc">Clique em <strong>selecionar</strong> para escolher o tipo de serviço que deseja.</div>
-        <a href="x.html" class="plat-btn">Selecionar →</a>
-      </div>
+        <span class="plat-btn">Selecionar →</span>
+      </a>
 
       <!-- plataforma-facebook -->
-      <div class="plataforma-card">
+      <a href="facebook.html" class="plataforma-card" style="text-decoration:none;display:block;">
         <span class="label">plataforma-facebook</span>
         <div class="plat-icon" style="background:#1877F2;">
           <svg viewBox="0 0 24 24" fill="white" width="28" height="28"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
         </div>
         <div class="plat-name">Facebook</div>
         <div class="plat-desc">Clique em <strong>selecionar</strong> para escolher o tipo de serviço que deseja.</div>
-        <a href="facebook.html" class="plat-btn">Selecionar →</a>
-      </div>
+        <span class="plat-btn">Selecionar →</span>
+      </a>
 
       <!-- plataforma-telegram -->
-      <div class="plataforma-card">
+      <a href="telegram.html" class="plataforma-card" style="text-decoration:none;display:block;">
         <span class="label">plataforma-telegram</span>
         <div class="plat-icon" style="background:#26A5E4;">
           <svg viewBox="0 0 24 24" fill="white" width="28" height="28"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
         </div>
         <div class="plat-name">Telegram</div>
         <div class="plat-desc">Clique em <strong>selecionar</strong> para escolher o tipo de serviço que deseja.</div>
-        <a href="telegram.html" class="plat-btn">Selecionar →</a>
-      </div>
+        <span class="plat-btn">Selecionar →</span>
+      </a>
 
       <!-- plataforma-whatsapp -->
-      <div class="plataforma-card">
+      <a href="whatsapp.html" class="plataforma-card" style="text-decoration:none;display:block;">
         <span class="label">plataforma-whatsapp</span>
         <div class="plat-icon" style="background:#25D366;">
           <svg viewBox="0 0 24 24" fill="white" width="28" height="28"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
         </div>
         <div class="plat-name">WhatsApp</div>
         <div class="plat-desc">Clique em <strong>selecionar</strong> para escolher o tipo de serviço que deseja.</div>
-        <a href="whatsapp.html" class="plat-btn">Selecionar →</a>
-      </div>
+        <span class="plat-btn">Selecionar →</span>
+      </a>
 
       <!-- plataforma-threads -->
-      <div class="plataforma-card">
+      <a href="threads.html" class="plataforma-card" style="text-decoration:none;display:block;">
         <span class="label">plataforma-threads</span>
         <div class="plat-icon" style="background:#000000;">
           <svg viewBox="0 0 24 24" fill="white" width="28" height="28"><path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.472 12.01v-.017c.03-3.579.879-6.43 2.525-8.482C5.851 1.205 8.604.024 12.185 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-1.104-3.96-3.898-5.984-8.304-6.015-2.91.022-5.11.936-6.54 2.717C4.307 6.504 3.616 8.914 3.589 12c.027 3.086.718 5.496 2.057 7.164 1.43 1.783 3.631 2.698 6.54 2.717 2.623-.02 4.358-.631 5.8-2.045 1.568-1.537 1.608-3.369 1.09-4.798-.274-.737-.704-1.329-1.24-1.75-.164 1.35-.568 2.446-1.213 3.272-.878 1.135-2.162 1.724-3.813 1.813-1.202.065-2.34-.228-3.184-.801-1.036-.687-1.64-1.74-1.703-2.964-.063-1.19.4-2.285 1.295-3.082.857-.76 2.066-1.207 3.49-1.291.48-.028.96-.028 1.43-.007-.02-.31-.057-.596-.114-.853-.198-.913-.67-1.465-1.396-1.618a2.3 2.3 0 00-.468-.048c-.59 0-1.066.27-1.464.823l-1.653-1.219C9.56 5.597 10.72 5 12.074 5c.319 0 .642.034.968.1 1.85.368 2.93 1.69 3.044 3.72.01.17.015.345.013.524.57.295 1.074.674 1.496 1.128 1.019 1.085 1.587 2.554 1.567 4.028-.033 2.497-1.529 4.936-4.067 6.317C13.917 23.726 13.077 24 12.186 24zm.124-8.02c-.26 0-.528.012-.8.035-.963.063-1.712.354-2.166.842-.338.362-.503.816-.471 1.279.046.762.497 1.08.873 1.327.552.358 1.3.538 2.16.491 1.107-.06 1.914-.499 2.401-1.304.315-.523.494-1.208.554-2.096a10.83 10.83 0 00-2.551-.574z"/></svg>
         </div>
         <div class="plat-name">Threads</div>
         <div class="plat-desc">Clique em <strong>selecionar</strong> para escolher o tipo de serviço que deseja.</div>
-        <a href="threads.html" class="plat-btn">Selecionar →</a>
-      </div>
+        <span class="plat-btn">Selecionar →</span>
+      </a>
 
     </div>
   </div>
@@ -1769,6 +2045,341 @@
     animate();
     document.removeEventListener('mousemove', startTrail);
   }, { once: true });
+})();
+</script>
+<!-- ========== DASHBOARD JS ========== -->
+<script>
+// ===== DADOS FICTÍCIOS =====
+const txnData = [
+  { id:'#38210', service:'Seguidores Reais', platform:'Instagram', qty:1000, value:29.90, date:'13/03/2026', status:'done' },
+  { id:'#38185', service:'Visualizações',    platform:'YouTube',   qty:5000, value:14.50, date:'12/03/2026', status:'done' },
+  { id:'#38140', service:'Streams',          platform:'Spotify',   qty:2000, value:18.70, date:'11/03/2026', status:'pending' },
+  { id:'#38102', service:'Curtidas',         platform:'TikTok',    qty:500,  value:8.90,  date:'10/03/2026', status:'done' },
+  { id:'#38055', service:'Seguidores',       platform:'Twitter',   qty:300,  value:12.00, date:'09/03/2026', status:'fail' },
+  { id:'#38021', service:'Comentários',      platform:'Instagram', qty:50,   value:22.00, date:'08/03/2026', status:'done' },
+  { id:'#37998', service:'Saves',            platform:'Instagram', qty:200,  value:9.50,  date:'07/03/2026', status:'done' },
+  { id:'#37960', service:'Inscritos',        platform:'YouTube',   qty:1000, value:35.00, date:'06/03/2026', status:'pending' },
+];
+
+const notifData = [
+  { ico:'✅', title:'Pedido #38210 concluído!', text:'Seus seguidores foram entregues com sucesso.', time:'há 2h', unread:true },
+  { ico:'⏳', title:'Pedido #38140 em andamento', text:'Seus streams estão sendo processados.', time:'há 5h', unread:true },
+  { ico:'❌', title:'Pedido #38055 falhou', text:'Houve um erro. Você será reembolsado.', time:'há 1d', unread:false },
+  { ico:'💰', title:'Saldo adicionado', text:'R$ 50,00 foram adicionados à sua conta.', time:'há 2d', unread:false },
+];
+
+// ===== STATS =====
+function renderStats() {
+  const total = txnData.filter(t => t.status === 'done').reduce((s, t) => s + t.value, 0);
+  const ativos = txnData.filter(t => t.status === 'pending').length;
+  const concluidos = txnData.filter(t => t.status === 'done').length;
+
+  document.getElementById('stat-total').textContent = 'R$ ' + total.toFixed(2).replace('.', ',');
+  document.getElementById('stat-ativos').textContent = ativos;
+  document.getElementById('stat-concluidos').textContent = concluidos;
+  document.getElementById('stat-saldo').textContent = 'R$ 50,00';
+}
+
+// ===== TRANSAÇÕES =====
+function renderTxns(data) {
+  const statusLabel = { done:'Concluído', pending:'Pendente', fail:'Falhou' };
+  document.getElementById('txnBody').innerHTML = data.map(t => `
+    <tr>
+      <td style="font-family:'Orbitron',sans-serif;font-size:11px;color:var(--purple-light)">${t.id}</td>
+      <td>${t.service}</td>
+      <td>${t.platform}</td>
+      <td>${t.qty.toLocaleString('pt-BR')}</td>
+      <td>R$ ${t.value.toFixed(2).replace('.',',')}</td>
+      <td style="color:var(--text-muted)">${t.date}</td>
+      <td><span class="txn-status ${t.status}">${statusLabel[t.status]}</span></td>
+    </tr>
+  `).join('');
+}
+
+function filterTxns() {
+  const st = document.getElementById('filterStatus').value;
+  const pl = document.getElementById('filterPlatform').value;
+  let d = [...txnData];
+  if (st !== 'all') d = d.filter(t => t.status === st);
+  if (pl !== 'all') d = d.filter(t => t.platform === pl);
+  renderTxns(d);
+}
+
+function exportCSV() {
+  const st = document.getElementById('filterStatus').value;
+  const pl = document.getElementById('filterPlatform').value;
+  let d = [...txnData];
+  if (st !== 'all') d = d.filter(t => t.status === st);
+  if (pl !== 'all') d = d.filter(t => t.platform === pl);
+  const header = ['Pedido','Serviço','Plataforma','Qtd','Valor','Data','Status'];
+  const rows = d.map(t => [t.id, t.service, t.platform, t.qty, 'R$ ' + t.value.toFixed(2).replace('.',','), t.date, t.status].join(','));
+  const csv = [header.join(','), ...rows].join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent('\uFEFF' + csv);
+  a.download = 'historico.csv';
+  a.click();
+}
+
+// ===== NOTIFICAÇÕES =====
+function renderNotifs() {
+  const unread = notifData.filter(n => n.unread).length;
+  document.getElementById('notifDot').style.display = unread > 0 ? 'block' : 'none';
+  document.getElementById('notifList').innerHTML = notifData.map(n => `
+    <div class="notif-item ${n.unread ? 'unread' : ''}">
+      <div class="notif-ico">${n.ico}</div>
+      <div>
+        <div class="notif-body"><strong>${n.title}</strong>${n.text}</div>
+        <div class="notif-time">${n.time}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleNotif() {
+  document.getElementById('notifDropdown').classList.toggle('open');
+}
+
+function clearNotifs() {
+  notifData.forEach(n => n.unread = false);
+  renderNotifs();
+}
+
+document.addEventListener('click', function(e) {
+  const wrap = document.getElementById('notifBell').closest ? document.getElementById('notifBell').parentElement : null;
+  if (wrap && !wrap.contains(e.target)) {
+    document.getElementById('notifDropdown').classList.remove('open');
+  }
+});
+
+// ===== TEMA =====
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme');
+  const next = current === 'light' ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('theme', next);
+  document.getElementById('themeIcon').textContent = next === 'dark' ? '🌙' : '☀️';
+}
+
+(function initTheme() {
+  const saved = localStorage.getItem('theme') || 'dark';
+  document.documentElement.setAttribute('data-theme', saved);
+  const icon = document.getElementById('themeIcon');
+  if (icon) icon.textContent = saved === 'dark' ? '🌙' : '☀️';
+})();
+
+// ===== CHARTS =====
+const chartData = {
+  '7d': {
+    labels: ['07/03','08/03','09/03','10/03','11/03','12/03','13/03'],
+    data:   [2, 1, 3, 2, 1, 2, 3]
+  },
+  '30d': {
+    labels: Array.from({length:10}, (_,i) => { const d = new Date('2026-03-13'); d.setDate(d.getDate()-27+i*3); return (d.getDate()).toString().padStart(2,'0')+'/'+(d.getMonth()+1).toString().padStart(2,'0'); }),
+    data:   [1,2,3,4,2,5,3,6,4,7]
+  },
+  '90d': {
+    labels: Array.from({length:9}, (_,i) => { const d = new Date('2026-03-13'); d.setDate(d.getDate()-80+i*10); return (d.getDate()).toString().padStart(2,'0')+'/'+(d.getMonth()+1).toString().padStart(2,'0'); }),
+    data:   [3,5,4,8,6,9,7,11,8]
+  }
+};
+
+let pedidosChartInstance = null;
+
+function updateChart(period, btn) {
+  document.querySelectorAll('.chart-period-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const { labels, data } = chartData[period];
+  if (pedidosChartInstance) {
+    pedidosChartInstance.data.labels = labels;
+    pedidosChartInstance.data.datasets[0].data = data;
+    pedidosChartInstance.update();
+  }
+}
+
+function initCharts() {
+  const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+  const gridColor = isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.07)';
+  const textColor = isDark ? '#888' : '#666';
+
+  // Linha — pedidos ao longo do tempo
+  const ctxLine = document.getElementById('pedidosChart').getContext('2d');
+  const grad = ctxLine.createLinearGradient(0, 0, 0, 200);
+  grad.addColorStop(0, 'rgba(139,47,201,0.35)');
+  grad.addColorStop(1, 'rgba(139,47,201,0)');
+
+  pedidosChartInstance = new Chart(ctxLine, {
+    type: 'line',
+    data: {
+      labels: chartData['7d'].labels,
+      datasets: [{
+        label: 'Pedidos',
+        data: chartData['7d'].data,
+        fill: true,
+        backgroundColor: grad,
+        borderColor: '#A855F7',
+        borderWidth: 2,
+        pointBackgroundColor: '#A855F7',
+        tension: 0.4,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { grid: { color: gridColor }, ticks: { color: textColor, font: { size: 11 } } },
+        y: { grid: { color: gridColor }, ticks: { color: textColor, font: { size: 11 }, stepSize: 1 } }
+      }
+    }
+  });
+
+  // Rosca — top plataformas
+  const plataformas = {};
+  txnData.forEach(t => { plataformas[t.platform] = (plataformas[t.platform] || 0) + 1; });
+  const ctxDough = document.getElementById('plataformasChart').getContext('2d');
+  new Chart(ctxDough, {
+    type: 'doughnut',
+    data: {
+      labels: Object.keys(plataformas),
+      datasets: [{
+        data: Object.values(plataformas),
+        backgroundColor: ['#A855F7','#E040FB','#7C3AED','#C084FC','#9333EA'],
+        borderColor: 'transparent',
+        hoverOffset: 8
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: 'bottom', labels: { color: textColor, font: { size: 11 }, padding: 12, boxWidth: 12 } }
+      }
+    }
+  });
+}
+
+// Init
+renderStats();
+renderTxns(txnData);
+renderNotifs();
+initCharts();
+</script>
+<!-- ========== SOCIAL PROOF TOASTS ========== -->
+<style>
+  .sp-toast {
+    position: fixed;
+    bottom: 28px;
+    left: 28px;
+    background: var(--card);
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+    padding: 13px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.45);
+    z-index: 9999;
+    min-width: 270px;
+    max-width: 320px;
+    transform: translateX(-120%);
+    opacity: 0;
+    transition: transform 0.45s cubic-bezier(.34,1.56,.64,1), opacity 0.35s ease;
+    pointer-events: none;
+  }
+  .sp-toast.show {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  .sp-toast.hide {
+    transform: translateX(-120%);
+    opacity: 0;
+    transition: transform 0.35s ease, opacity 0.3s ease;
+  }
+  .sp-avatar {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px;
+    flex-shrink: 0;
+    font-weight: 700;
+    color: #fff;
+  }
+  .sp-text { flex: 1; }
+  .sp-name { font-size: 13px; font-weight: 700; color: var(--text); }
+  .sp-action { font-size: 12px; color: var(--text-muted); margin-top: 2px; line-height: 1.4; }
+  .sp-time { font-size: 10px; color: var(--purple-light); margin-top: 3px; }
+  .sp-verified { font-size: 11px; flex-shrink: 0; }
+</style>
+
+<div class="sp-toast" id="spToast">
+  <div class="sp-avatar" id="spAvatar"></div>
+  <div class="sp-text">
+    <div class="sp-name" id="spName"></div>
+    <div class="sp-action" id="spAction"></div>
+    <div class="sp-time" id="spTime"></div>
+  </div>
+  <div class="sp-verified">✅</div>
+</div>
+
+<script>
+(function() {
+  const notifications = [
+    { name: 'joão_silva92',    action: 'comprou 5.000 seguidores',    platform: 'Instagram',  color: '#C026D3' },
+    { name: 'marianaa.f',      action: 'comprou 1.000 curtidas',      platform: 'TikTok',     color: '#010101' },
+    { name: 'pedrohenrique_',  action: 'comprou 10.000 streams',      platform: 'Spotify',    color: '#1DB954' },
+    { name: 'carol.mendes7',   action: 'comprou 2.000 seguidores',    platform: 'Instagram',  color: '#C026D3' },
+    { name: 'luc4s.dev',       action: 'comprou 50.000 visualizações',platform: 'YouTube',    color: '#FF0000' },
+    { name: 'gabii.real',      action: 'comprou 500 comentários',     platform: 'Instagram',  color: '#C026D3' },
+    { name: 'thiagooliveira_', action: 'comprou 3.000 inscritos',     platform: 'YouTube',    color: '#FF0000' },
+    { name: 'bela.fonseca',    action: 'comprou 800 curtidas',        platform: 'TikTok',     color: '#010101' },
+    { name: 'rafa.music',      action: 'comprou 20.000 streams',      platform: 'Spotify',    color: '#1DB954' },
+    { name: 'mateusxd_br',     action: 'comprou 1.500 seguidores',    platform: 'X',          color: '#000' },
+    { name: 'aninhaa.vibes',   action: 'comprou 300 reposts',         platform: 'X',          color: '#000' },
+    { name: 'fernandocosta99', action: 'comprou 7.000 visualizações', platform: 'YouTube',    color: '#FF0000' },
+    { name: 'ju.lifestyle',    action: 'comprou 2.500 seguidores',    platform: 'Instagram',  color: '#C026D3' },
+    { name: 'vini_official',   action: 'comprou 10.000 curtidas',     platform: 'TikTok',     color: '#010101' },
+    { name: 'claudinhofit',    action: 'comprou 4.000 seguidores',    platform: 'Instagram',  color: '#C026D3' },
+    { name: 'tata.creator',    action: 'comprou 600 saves',           platform: 'Instagram',  color: '#C026D3' },
+    { name: 'brunoo.beats',    action: 'comprou 15.000 streams',      platform: 'Spotify',    color: '#1DB954' },
+    { name: 'nati.vlogs',      action: 'comprou 3.000 inscritos',     platform: 'YouTube',    color: '#FF0000' },
+    { name: 'diegosantos_br',  action: 'comprou 900 membros',         platform: 'Telegram',   color: '#26A5E4' },
+    { name: 'larissa.style',   action: 'comprou 5.000 seguidores',    platform: 'TikTok',     color: '#010101' },
+  ];
+
+  const times = ['agora mesmo', 'há 1 min', 'há 2 min', 'há 3 min', 'há 5 min'];
+  const colors = ['#8B2FC9','#A855F7','#C026D3','#7C3AED','#6D28D9','#DB2777'];
+
+  let idx = Math.floor(Math.random() * notifications.length);
+
+  function showToast() {
+    const n = notifications[idx % notifications.length];
+    idx++;
+
+    const toast   = document.getElementById('spToast');
+    const avatar  = document.getElementById('spAvatar');
+    const nameEl  = document.getElementById('spName');
+    const actionEl= document.getElementById('spAction');
+    const timeEl  = document.getElementById('spTime');
+
+    const initials = n.name.replace(/[^a-zA-Z]/g,'').slice(0,2).toUpperCase() || '??';
+    avatar.textContent = initials;
+    avatar.style.background = colors[idx % colors.length];
+    nameEl.textContent = '@' + n.name;
+    actionEl.textContent = n.action + ' no ' + n.platform;
+    timeEl.textContent = times[Math.floor(Math.random() * times.length)];
+
+    toast.classList.remove('hide');
+    toast.classList.add('show');
+
+    setTimeout(() => {
+      toast.classList.remove('show');
+      toast.classList.add('hide');
+    }, 4000);
+  }
+
+  // Primeira aparição entre 4–8s, depois a cada 10–18s
+  setTimeout(function loop() {
+    showToast();
+    setTimeout(loop, 10000 + Math.random() * 8000);
+  }, 4000 + Math.random() * 4000);
 })();
 </script>
 </body>
