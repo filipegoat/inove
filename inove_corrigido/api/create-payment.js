@@ -10,7 +10,14 @@ export default async function handler(req, res) {
   try {
     const { service_id, service_name, quantity, price, buyer_email, platform } = req.body;
 
-    // 1. Cria o pagamento Pix no Mercado Pago
+    console.log('Body recebido:', { service_id, service_name, quantity, price, buyer_email, platform });
+
+    // Validar e converter o valor
+    const amount = parseFloat(parseFloat(price).toFixed(2));
+    if (!amount || isNaN(amount) || amount <= 0) {
+      return res.status(400).json({ error: 'Preço inválido', price_recebido: price });
+    }
+
     const mpResponse = await fetch('https://api.mercadopago.com/v1/payments', {
       method: 'POST',
       headers: {
@@ -19,13 +26,13 @@ export default async function handler(req, res) {
         'X-Idempotency-Key': `${Date.now()}-${service_id}-${quantity}`,
       },
       body: JSON.stringify({
-        transaction_amount: parseFloat(price),
+        transaction_amount: amount,
         description: `${service_name} - ${quantity} unidades (${platform})`,
         payment_method_id: 'pix',
         payer: {
-          email: buyer_email || 'cliente@followboost.com.br',
+          email: buyer_email || 'cliente@inove.com.br',
         },
-        notification_url: 'https://SEU-PROJETO.vercel.app/api/webhook',
+        notification_url: `https://${req.headers.host}/api/webhook`,
         metadata: {
           service_id,
           service_name,
@@ -36,13 +43,12 @@ export default async function handler(req, res) {
     });
 
     const payment = await mpResponse.json();
+    console.log('Resposta MP status:', payment.status);
 
     if (!mpResponse.ok) {
-      console.error('Erro MP:', payment);
       return res.status(400).json({ error: 'Erro ao criar pagamento', details: payment });
     }
 
-    // 2. Retorna o QR Code Pix pro frontend
     return res.status(200).json({
       payment_id: payment.id,
       status: payment.status,
