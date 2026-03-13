@@ -5,6 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Fazer Pedido</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;800&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <script>
+    (function(){
+      const t = localStorage.getItem('theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
   <style>
     :root {
       --purple: #8B2FC9;
@@ -18,6 +24,43 @@
       --green: #22c55e;
       --pix: #32BCAD;
     }
+
+
+    [data-theme="light"] {
+      --bg: #F5F5FC;
+      --bg2: #EBEBF5;
+      --card: #FFFFFF;
+      --card-border: #D8D8EE;
+      --text: #0A0A1A;
+      --muted: #55557A;
+    }
+    [data-theme="light"] body { background: var(--bg); color: var(--text); }
+    [data-theme="light"] nav { background: rgba(245,245,252,0.95); }
+    [data-theme="light"] .hero { background: linear-gradient(135deg,#EDE5FC 0%,#F0EAFF 40%,var(--bg) 100%); }
+    [data-theme="light"] .card-left,
+    [data-theme="light"] .order-summary { background: #fff; border-color: var(--card-border); }
+    [data-theme="light"] .qty-input { background: #fff; color: var(--text); border-color: var(--card-border); }
+    [data-theme="light"] .field-input { background: #fff; color: var(--text); border-color: var(--card-border); }
+    [data-theme="light"] .req-box { background: rgba(139,47,201,0.05); }
+    [data-theme="light"] .pay-opt { background: #fff; border-color: var(--card-border); color: var(--text); }
+    [data-theme="light"] .upsell-card { background: #F0EAFF; border-color: var(--card-border); }
+
+    /* Theme toggle */
+    .theme-toggle-wrap { display:flex; align-items:center; gap:6px; flex-shrink:0; }
+    .theme-icon { font-size:14px; }
+    .theme-toggle {
+      background: var(--card); border: 1px solid var(--card-border);
+      border-radius: 20px; width:42px; height:22px;
+      cursor:pointer; position:relative;
+      transition: background 0.3s;
+    }
+    .theme-toggle::after {
+      content:''; position:absolute; top:2px; left:2px;
+      width:18px; height:18px; border-radius:50%;
+      background: linear-gradient(135deg,#8B2FC9,#A855F7);
+      transition: transform 0.3s;
+    }
+    [data-theme="light"] .theme-toggle::after { transform: translateX(20px); }
 
     * { margin:0; padding:0; box-sizing:border-box; }
     body { background:var(--bg); color:var(--text); font-family:'DM Sans',sans-serif; min-height:100vh; }
@@ -332,7 +375,10 @@
       <div class="nav-icon" id="nav-icon"></div>
       <span id="nav-title-text">Fazer Pedido</span>
     </div>
-    <div style="width:80px"></div>
+    <div class="theme-toggle-wrap">
+      <span class="theme-icon" id="themeIcon">🌙</span>
+      <button class="theme-toggle" onclick="toggleTheme()" title="Alternar tema"></button>
+    </div>
   </nav>
 
   <!-- HERO -->
@@ -801,5 +847,20 @@ document.getElementById('customAlertOverlay').addEventListener('click', function
 });
 </script>
 
+  <script>
+    function toggleTheme() {
+      const cur = document.documentElement.getAttribute('data-theme');
+      const next = cur === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      document.getElementById('themeIcon').textContent = next === 'dark' ? '🌙' : '☀️';
+    }
+    // Set correct icon on load
+    (function(){
+      const t = localStorage.getItem('theme') || 'dark';
+      const el = document.getElementById('themeIcon');
+      if (el) el.textContent = t === 'dark' ? '🌙' : '☀️';
+    })();
+  </script>
 </body>
 </html>
