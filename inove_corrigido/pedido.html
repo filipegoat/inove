@@ -675,12 +675,82 @@
     }
   }
 
-  function finalizarPedido() {
-    const link = document.getElementById('profileLink').value.trim();
+  async function finalizarPedido() {
+    const link  = document.getElementById('profileLink').value.trim();
     const terms = document.getElementById('termsCheck').checked;
-    if (!link) { showCustomAlert(`Preencha o ${cfg.linkLabel}.`, 'warn'); return; }
+    const email = document.getElementById('emailInput')?.value.trim() || '';
+
+    if (!link)  { showCustomAlert(`Preencha o ${cfg.linkLabel}.`, 'warn'); return; }
     if (!terms) { showCustomAlert('Aceite os Termos de Uso para continuar.', 'warn'); return; }
-    showCustomAlert('Pedido recebido! Em breve você será redirecionado para o pagamento.', 'success');
+    if (cart.length === 0) { showCustomAlert('Adicione pelo menos um serviço ao carrinho.', 'warn'); return; }
+
+    const totalPrice = cart.reduce((sum, i) => sum + i.price, 0);
+    const firstItem  = cart[0];
+
+    const btn = document.getElementById('btnFinalizar');
+    const btnOriginal = btn ? btn.innerHTML : '';
+    if (btn) { btn.disabled = true; btn.innerHTML = '⏳ Gerando pagamento...'; }
+
+    try {
+      const res = await fetch('/api/create-payment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          service_id:   firstItem.service,
+          service_name: firstItem.name,
+          quantity:     firstItem.qty,
+          price:        totalPrice.toFixed(2),
+          buyer_email:  email || 'cliente@inove.com.br',
+          platform:     cfg.platform || 'instagram',
+          profile_link: link,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.qr_code) {
+        console.error('Erro MP:', data);
+        showCustomAlert('Erro ao gerar pagamento. Tente novamente.', 'warn');
+        if (btn) { btn.disabled = false; btn.innerHTML = btnOriginal; }
+        return;
+      }
+
+      mostrarQRCode(data, totalPrice);
+
+    } catch (err) {
+      console.error('Erro:', err);
+      showCustomAlert('Erro de conexão. Verifique sua internet.', 'warn');
+      if (btn) { btn.disabled = false; btn.innerHTML = btnOriginal; }
+    }
+  }
+
+  function mostrarQRCode(data, total) {
+    document.getElementById('qrModal')?.remove();
+    const modal = document.createElement('div');
+    modal.id = 'qrModal';
+    modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(6px);z-index:9998;display:flex;align-items:center;justify-content:center;';
+    const valorFmt = parseFloat(total).toFixed(2).replace('.', ',');
+    modal.innerHTML = `
+      <div style="background:#1A1A26;border:1px solid #2A2A3A;border-radius:24px;padding:32px 28px;max-width:380px;width:90%;text-align:center;box-shadow:0 0 60px rgba(139,47,201,0.3);">
+        <div style="font-size:12px;color:#A855F7;font-family:'Orbitron',sans-serif;letter-spacing:2px;margin-bottom:8px;">✦ PIX</div>
+        <div style="font-family:'Orbitron',sans-serif;font-size:18px;font-weight:800;color:#F0F0FF;margin-bottom:4px;">Pague com Pix</div>
+        <div style="font-size:13px;color:#8888AA;margin-bottom:20px;">Escaneie o QR Code abaixo</div>
+        <div style="background:#0A0A0F;border-radius:16px;padding:16px;display:inline-block;margin-bottom:16px;">
+          <img src="data:image/png;base64,${data.qr_code_base64}" style="width:200px;height:200px;display:block;" alt="QR Code Pix"/>
+        </div>
+        <div style="font-family:'Orbitron',sans-serif;font-size:22px;font-weight:800;background:linear-gradient(135deg,#A855F7,#E040FB);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px;">R$ ${valorFmt}</div>
+        <div style="font-size:12px;color:#8888AA;margin-bottom:20px;">⏱ Expira em 30 minutos</div>
+        <div style="background:#111118;border:1px solid #2A2A3A;border-radius:12px;padding:12px 16px;margin-bottom:20px;text-align:left;">
+          <div style="font-size:11px;color:#8888AA;margin-bottom:6px;">Ou copie o código Pix:</div>
+          <div style="font-size:11px;color:#F0F0FF;word-break:break-all;font-family:monospace;line-height:1.5;">${data.qr_code}</div>
+          <button onclick="navigator.clipboard.writeText('${data.qr_code}').then(()=>this.textContent='✅ Copiado!')" style="margin-top:8px;background:rgba(139,47,201,0.2);border:1px solid rgba(168,85,247,0.4);color:#A855F7;padding:6px 14px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">📋 Copiar código</button>
+        </div>
+        <button onclick="document.getElementById('qrModal').remove()" style="background:linear-gradient(135deg,#8B2FC9,#A855F7);color:white;border:none;padding:12px 32px;border-radius:50px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">Fechar</button>
+      </div>`;
+    document.body.appendChild(modal);
+    modal.addEventListener('click', e => { if (e.target === modal) modal.remove(); });
+    const btn = document.getElementById('btnFinalizar');
+    if (btn) { btn.disabled = false; btn.innerHTML = 'Finalizar Pedido'; }
   }
 
   atualizaResumo();
