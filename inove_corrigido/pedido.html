@@ -239,6 +239,88 @@
       .contact-grid, .pay-options { grid-template-columns:1fr; }
       .qty-section, .s2-section, .upsell-section, .contact-section, .pay-section, .terms-row { padding-left:18px; padding-right:18px; }
     }
+  
+    /* MODAL PERSONALIZADO */
+    .custom-alert-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(4px);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s;
+    }
+    .custom-alert-overlay.show {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .custom-alert-box {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 32px 28px;
+      max-width: 360px;
+      width: 90%;
+      text-align: center;
+      position: relative;
+      transform: scale(0.9) translateY(10px);
+      transition: transform 0.25s;
+
+      /* glow na borda */
+      box-shadow: 0 0 0 1px var(--card-border), 0 20px 60px rgba(139,47,201,0.25);
+    }
+    .custom-alert-overlay.show .custom-alert-box {
+      transform: scale(1) translateY(0);
+    }
+    .custom-alert-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      margin: 0 auto 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+    .custom-alert-icon.warn {
+      background: rgba(139,47,201,0.15);
+      border: 1px solid rgba(168,85,247,0.4);
+    }
+    .custom-alert-icon.success {
+      background: rgba(34,197,94,0.12);
+      border: 1px solid rgba(34,197,94,0.4);
+    }
+    .custom-alert-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 10px;
+    }
+    .custom-alert-msg {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+    .custom-alert-btn {
+      background: linear-gradient(135deg, var(--purple), var(--purple-light));
+      color: white;
+      border: none;
+      padding: 11px 32px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .custom-alert-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+
   </style>
 </head>
 <body>
@@ -326,11 +408,11 @@
         <div class="contact-section">
           <div class="contact-grid">
             <div>
-              <label class="field-label">E-mail</label>
+              <label class="field-label">E-mail <span style="font-weight:400; color:var(--muted); font-size:11px;">(não obrigatório)</span></label>
               <input class="field-input" type="email" id="emailInput" placeholder="seuemail@gmail.com">
             </div>
             <div>
-              <label class="field-label">WhatsApp</label>
+              <label class="field-label">WhatsApp <span style="font-weight:400; color:var(--muted); font-size:11px;">(não obrigatório)</span></label>
               <input class="field-input" type="tel" id="whatsInput" placeholder="(00) 00000-0000">
             </div>
           </div>
@@ -544,7 +626,7 @@
     if (qty > serviceMax) qty = serviceMax;
     document.getElementById('qtyInput').value = qty;
     atualizaResumo();
-    if (isNaN(qty)) { alert(`Insira uma quantidade válida.`); return; }
+    if (isNaN(qty)) { showCustomAlert(`Insira uma quantidade válida.`, 'warn'); return; }
     document.getElementById('step1').style.display = 'none';
     document.getElementById('step2').style.display = 'block';
     carregarUpsell();
@@ -596,12 +678,54 @@
   function finalizarPedido() {
     const link = document.getElementById('profileLink').value.trim();
     const terms = document.getElementById('termsCheck').checked;
-    if (!link) { alert(`Preencha o ${cfg.linkLabel}.`); return; }
-    if (!terms) { alert('Aceite os Termos de Uso para continuar.'); return; }
-    alert('Pedido recebido! Em breve você será redirecionado para o pagamento.');
+    if (!link) { showCustomAlert(`Preencha o ${cfg.linkLabel}.`, 'warn'); return; }
+    if (!terms) { showCustomAlert('Aceite os Termos de Uso para continuar.', 'warn'); return; }
+    showCustomAlert('Pedido recebido! Em breve você será redirecionado para o pagamento.', 'success');
   }
 
   atualizaResumo();
 </script>
+
+<!-- MODAL ALERTA PERSONALIZADO -->
+<div class="custom-alert-overlay" id="customAlertOverlay">
+  <div class="custom-alert-box">
+    <div class="custom-alert-icon" id="customAlertIcon">⚠️</div>
+    <div class="custom-alert-title" id="customAlertTitle">Atenção</div>
+    <div class="custom-alert-msg" id="customAlertMsg"></div>
+    <button class="custom-alert-btn" onclick="closeCustomAlert()">OK</button>
+  </div>
+</div>
+
+<script>
+function showCustomAlert(msg, type) {
+  const overlay = document.getElementById('customAlertOverlay');
+  const icon    = document.getElementById('customAlertIcon');
+  const title   = document.getElementById('customAlertTitle');
+  const msgEl   = document.getElementById('customAlertMsg');
+
+  if (type === 'success') {
+    icon.textContent = '✅';
+    icon.className = 'custom-alert-icon success';
+    title.textContent = 'Pronto!';
+  } else {
+    icon.textContent = '⚠️';
+    icon.className = 'custom-alert-icon warn';
+    title.textContent = 'Atenção';
+  }
+
+  msgEl.textContent = msg;
+  overlay.classList.add('show');
+}
+
+function closeCustomAlert() {
+  document.getElementById('customAlertOverlay').classList.remove('show');
+}
+
+// Fechar clicando fora
+document.getElementById('customAlertOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeCustomAlert();
+});
+</script>
+
 </body>
 </html>
